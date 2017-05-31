@@ -1,0 +1,16 @@
+Package: tropr
+Type: Package
+Version: 0.00.0001
+Date: 2017-05-31
+Author: Kim Seonghyun [aut, cre]
+Maintainer: Kim Seonghyun <shyeon.kim@scipi.net>
+Depends:
+    R (>= 3.2.0)
+Imports:
+    stringr,
+    rvest,
+    xml2
+License: Apache License 2.0 | file LICENSE
+VignetteBuilder: knitr
+LazyData: true
+RoxygenNote: 6.0.1

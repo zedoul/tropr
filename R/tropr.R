@@ -35,12 +35,14 @@ trope_node <- function(.url) {
 #' Get trope content data frame
 #'
 #' @param node \code{xml_nodeset} object
+#' @param category_name a default name for trope category
 #' @return \code{data.frame} with tv trope contents
 #' @importFrom xml2 read_html xml_attrs
 #' @importFrom rvest html_nodes html_children html_text
 #' @importFrom stringr str_trim
 #' @export
-trope_content <- function(node, category_name = "main") {
+trope_content <- function(node,
+                          category_name = "main") {
   ret <- data.frame(matrix(vector(), 0, 3,
                            dimnames = list(c(),
                                            c("category", "trope", "link"))),
@@ -52,7 +54,7 @@ trope_content <- function(node, category_name = "main") {
   for (i in 1:length(nodes)) {
     res <- xml_attrs(nodes[i])[[1]]
 
-    # Filter character(0)
+    # Add links if the sub_node has a group of links
     if (length(res) == 0) {
       sub_nodes <- html_nodes(nodes[i], "a")
       if (length(sub_nodes) == 0) {
@@ -75,6 +77,7 @@ trope_content <- function(node, category_name = "main") {
       next
     }
 
+    # Add link if the sub_node is a link
     if (res["class"] == "twikilink") {
       ret <- rbind(ret,
                    data.frame(category = category_name,
@@ -82,12 +85,14 @@ trope_content <- function(node, category_name = "main") {
                               link = res["href"]))
     }
 
+    # Change category name with folder label
     if (res["class"] == "folderlabel" &&
         res["onclick"] != "toggleAllFolders();") {
         category_name <- html_text(nodes[i])
         category_name <- stringr::str_trim(category_name)
     }
 
+    # Add links if the sub_node is a folder that contains a group of links
     if (res["class"] == "folder") {
       sub_nodes <- html_nodes(nodes[i], "a")
       for (j in 1:length(sub_nodes)) {

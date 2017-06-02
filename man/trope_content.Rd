@@ -4,10 +4,12 @@
 \alias{trope_content}
 \title{Get trope content data frame}
 \usage{
-trope_content(node)
+trope_content(node, category_name = "main")
 }
 \arguments{
 \item{node}{\code{xml_nodeset} object}
+
+\item{category_name}{a default name for trope category}
 }
 \value{
 \code{data.frame} with tv trope contents

@@ -40,12 +40,13 @@ trope_node <- function(.url) {
 #' @importFrom rvest html_nodes html_children html_text
 #' @importFrom stringr str_trim
 #' @export
-trope_content <- function(node) {
+trope_content <- function(node, category_name = "main") {
   ret <- data.frame(matrix(vector(), 0, 3,
                            dimnames = list(c(),
-                                           c("category", "trope", "link"))))
+                                           c("category", "trope", "link"))),
+                    stringsAsFactors = F)
 
-  .category <- "main"
+  # Find the latest level
   nodes <- html_children(node)
 
   for (i in 1:length(nodes)) {
@@ -53,20 +54,38 @@ trope_content <- function(node) {
 
     # Filter character(0)
     if (length(res) == 0) {
+      sub_nodes <- html_nodes(nodes[i], "a")
+      if (length(sub_nodes) == 0) {
+        next
+      }
+      for (j in 1:length(sub_nodes)) {
+        res <- xml_attrs(sub_nodes[j])[[1]]
+        if (length(res) == 0) {
+          next
+        }
+
+        if (res["class"] == "twikilink") {
+          ret <- rbind(ret,
+                       data.frame(category = category_name,
+                                  trope = basename(res["href"]),
+                                  link = res["href"]))
+        }
+      }
+
       next
     }
 
     if (res["class"] == "twikilink") {
       ret <- rbind(ret,
-                   data.frame(category = .category,
+                   data.frame(category = category_name,
                               trope = basename(res["href"]),
                               link = res["href"]))
     }
 
     if (res["class"] == "folderlabel" &&
         res["onclick"] != "toggleAllFolders();") {
-        .category <- html_text(nodes[i])
-        .category <- stringr::str_trim(.category)
+        category_name <- html_text(nodes[i])
+        category_name <- stringr::str_trim(category_name)
     }
 
     if (res["class"] == "folder") {
@@ -75,7 +94,7 @@ trope_content <- function(node) {
         res <- xml_attrs(sub_nodes[j])[[1]]
         if (res["class"] == "twikilink") {
           ret <- rbind(ret,
-                       data.frame(category = .category,
+                       data.frame(category = category_name,
                                   trope = basename(res["href"]),
                                   link = res["href"]))
         }

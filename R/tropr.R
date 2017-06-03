@@ -97,6 +97,9 @@ trope_content <- function(node,
     if ("class" %in% names(res) &&
         res["class"] == "folder") {
       sub_nodes <- html_nodes(nodes[i], "a")
+      if (length(sub_nodes) == 0) {
+        next
+      }
       for (j in 1:length(sub_nodes)) {
         res <- xml_attrs(sub_nodes[j])[[1]]
         if (res["class"] == "twikilink") {

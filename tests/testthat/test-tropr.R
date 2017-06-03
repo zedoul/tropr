@@ -22,3 +22,11 @@ test_that("Some more cases", {
   expect_true(inherits(content, "data.frame"))
 })
 
+test_that("tricky cases", {
+  .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Hikikomori"
+  node <- trope_node(.url)
+  content <- trope_content(node)
+  expect_true(inherits(content, "data.frame"))
+})
+
+

@@ -78,7 +78,7 @@ trope_content <- function(node,
     }
 
     # Add link if the sub_node is a link
-    if (res["class"] == "twikilink") {
+    if ("class" %in% names(res) && res["class"] == "twikilink") {
       ret <- rbind(ret,
                    data.frame(category = category_name,
                               trope = basename(res["href"]),
@@ -86,14 +86,16 @@ trope_content <- function(node,
     }
 
     # Change category name with folder label
-    if (res["class"] == "folderlabel" &&
+    if ("class" %in% names(res) &&
+        res["class"] == "folderlabel" &&
         res["onclick"] != "toggleAllFolders();") {
         category_name <- html_text(nodes[i])
         category_name <- stringr::str_trim(category_name)
     }
 
     # Add links if the sub_node is a folder that contains a group of links
-    if (res["class"] == "folder") {
+    if ("class" %in% names(res) &&
+        res["class"] == "folder") {
       sub_nodes <- html_nodes(nodes[i], "a")
       for (j in 1:length(sub_nodes)) {
         res <- xml_attrs(sub_nodes[j])[[1]]

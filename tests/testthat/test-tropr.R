@@ -1,32 +1,28 @@
 context("tropr")
 
-test_that("trope_node, trope_content", {
+test_that("trope_content, as.data.frame", {
   .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
-  node <- trope_node(.url)
-  expect_true(inherits(node, "xml_nodeset"))
+  content <- trope_content(.url)
+  expect_true(inherits(content, "tropr.content"))
 
-  content <- trope_content(node)
-  expect_true(inherits(content, "data.frame"))
+  .df <- as.data.frame(content)
+  expect_true(inherits(.df, "data.frame"))
 
 })
 
-test_that("Some more cases", {
+test_that("More cases", {
   # anime page
   .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Anime/GirlsUndPanzer"
-  content <- trope_content(trope_node(.url))
-  expect_true(inherits(content, "data.frame"))
+  .df <- as.data.frame(trope_content(.url))
+  expect_true(inherits(.df, "data.frame"))
 
   # character
   .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/GirlsUndPanzerOaraiAcademyAnglerfishTeam"
-  content <- trope_content(trope_node(.url))
-  expect_true(inherits(content, "data.frame"))
-})
+  .df <- as.data.frame(trope_content(.url))
+  expect_true(inherits(.df, "data.frame"))
 
-test_that("tricky cases", {
+  # A bit tricky page
   .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Hikikomori"
-  node <- trope_node(.url)
-  content <- trope_content(node)
-  expect_true(inherits(content, "data.frame"))
+  .df <- as.data.frame(trope_content(.url))
+  expect_true(inherits(.df, "data.frame"))
 })
-
-

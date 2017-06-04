@@ -2,18 +2,25 @@
 % Please edit documentation in R/tropr.R
 \name{trope_content}
 \alias{trope_content}
-\title{Get trope content data frame}
+\title{Get xml nodeset}
 \usage{
-trope_content(node, category_name = "main")
+trope_content(.url)
 }
 \arguments{
-\item{node}{\code{xml_nodeset} object}
-
-\item{category_name}{a default name for trope category}
+\item{.url}{TV Tropes page url}
 }
 \value{
-\code{data.frame} with tv trope contents
+\code{xml_nodeset} if it exists, it will return \code{xml_nodeset}
+  which contains TV Tropes page content, otherwise it will show error msg
 }
 \description{
-Get trope content data frame
+You can use \code{trope_node} with TV Tropes URL to get \code{xml_nodeset},
+and \code{as.data.frame()} converts \code{xml_nodeset} to \code{data.frame}
+}
+\examples{
+\dontrun{
+.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+# It will return xml nodeset
+content <- trope_content(.url)
+}
 }

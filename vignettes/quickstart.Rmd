@@ -1,0 +1,54 @@
+---
+author: "Kim Seonghyun"
+title: "Quick start"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE}
+library(tropr)
+library(ggplot2)
+```
+
+# Installation
+
+Either you try stable CRAN version
+
+```{r, eval = F}
+install.packages("tropr")
+```
+
+Or unstable development version
+
+```{r, eval = F}
+devtools::install_github("zedoul/tropr")
+```
+
+You'll need to you `library` to load as follows:
+
+```{r, eval = F}
+library(tropr)
+```
+
+# Get TV Trope data
+
+```{r}
+library(tropr)
+
+.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+content <- trope_content(.url)
+.df <- as.data.frame(content)
+head(.df[, c("category", "link")])
+```
+
+The output is `tidy`, so that you can easily turn them into a plot as follows:
+
+```{r}
+q <- ggplot(.df, aes(category)) + geom_bar() +
+       coord_flip() + ylab("Freq") + xlab("")
+plot(q)
+```

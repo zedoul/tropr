@@ -1,11 +1,21 @@
-#' Get trope xml nodeset
+#' Get xml nodeset
 #'
-#' @param .url tvtrope page url
-#' @return \code{xml_nodeset} which contains TV Tropes page content
+#' You can use \code{trope_node} with TV Tropes URL to get \code{xml_nodeset},
+#' and \code{as.data.frame()} converts \code{xml_nodeset} to \code{data.frame}
+#'
+#' @param .url TV Tropes page url
+#' @return \code{xml_nodeset} if it exists, it will return \code{xml_nodeset}
+#'   which contains TV Tropes page content, otherwise it will show error msg
 #' @importFrom xml2 read_html xml_attrs
 #' @importFrom rvest html_nodes
 #' @export
-trope_node <- function(.url) {
+#' @examples
+#' \dontrun{
+#' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+#' # It will return xml nodeset
+#' content <- trope_content(.url)
+#'}
+trope_content <- function(.url) {
   doc <- xml2::read_html(.url)
 
   target_node <- NULL
@@ -29,27 +39,35 @@ trope_node <- function(.url) {
     stop("Failed to find tvtrope content")
   }
 
-  target_node
+  structure(target_node, class = "tropr.content")
 }
 
-#' Get trope content data frame
+#' Convert TV Trope content to data frame
 #'
-#' @param node \code{xml_nodeset} object
+#' @param content \code{tropr.content} object
 #' @param category_name a default name for trope category
 #' @return \code{data.frame} with tv trope contents
 #' @importFrom xml2 read_html xml_attrs
 #' @importFrom rvest html_nodes html_children html_text
 #' @importFrom stringr str_trim
 #' @export
-trope_content <- function(node,
-                          category_name = "main") {
+#' @examples
+#' \dontrun{
+#' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Hikikomori"
+#' content <- trope_content(.url)
+#' # Returns \code{data.frame}
+#' content <- as.data.frame(node)
+#' }
+as.data.frame.tropr.content <- function(content,
+                                        category_name = "main") {
+  class(content) <- "xml_nodeset"
   ret <- data.frame(matrix(vector(), 0, 3,
                            dimnames = list(c(),
                                            c("category", "trope", "link"))),
                     stringsAsFactors = F)
 
   # Find the latest level
-  nodes <- html_children(node)
+  nodes <- html_children(content)
 
   for (i in 1:length(nodes)) {
     res <- xml_attrs(nodes[i])[[1]]

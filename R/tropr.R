@@ -1,20 +1,19 @@
-#' Get xml nodeset
+#' Get TV Trope content
 #'
-#' You can use \code{trope_node} with TV Tropes URL to get \code{xml_nodeset},
-#' and \code{as.data.frame()} converts \code{xml_nodeset} to \code{data.frame}
+#' You can use \code{trope_content} with TV Tropes URL to get its content,
+#' and \code{as.data.frame()} converts the content to \code{data.frame}
 #'
 #' @param .url TV Tropes page url
-#' @return \code{xml_nodeset} if it exists, it will return \code{xml_nodeset}
-#'   which contains TV Tropes page content, otherwise it will show error msg
+#' @return \code{tropr.content} if it exists, it returns \code{tropr.content}
+#'   which contains TV Tropes page content, otherwise it will show error.
 #' @importFrom xml2 read_html xml_attrs
 #' @importFrom rvest html_nodes
 #' @export
 #' @examples
-#' \dontrun{
+#' library(tropr)
+#'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
-#' # It will return xml nodeset
 #' content <- trope_content(.url)
-#'}
 trope_content <- function(.url) {
   doc <- xml2::read_html(.url)
 
@@ -44,27 +43,34 @@ trope_content <- function(.url) {
 
 #' Convert TV Trope content to data frame
 #'
-#' @param content \code{tropr.content} object
-#' @param category_name a default name for trope category
+#' @param x \code{tropr.content} object
+#' @param stringsAsFactors logical: should the character vector be converted to
+#'   a factor?
+#' @param ... additional arguments to be passed to \code{data.frame}
 #' @return \code{data.frame} with tv trope contents
 #' @importFrom xml2 read_html xml_attrs
 #' @importFrom rvest html_nodes html_children html_text
 #' @importFrom stringr str_trim
 #' @export
 #' @examples
-#' \dontrun{
-#' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Hikikomori"
+#' library(tropr)
+#'
+#' # Use any TV Trope URL that you analyses
+#' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+#'
 #' content <- trope_content(.url)
-#' # Returns \code{data.frame}
-#' content <- as.data.frame(node)
-#' }
-as.data.frame.tropr.content <- function(content,
-                                        category_name = "main") {
+#' .df <- as.data.frame(content)
+as.data.frame.tropr.content <- function(x,
+                                ...,
+                                stringsAsFactors = default.stringsAsFactors()) {
+  content <- x
+  category_name = "main"
+
   class(content) <- "xml_nodeset"
   ret <- data.frame(matrix(vector(), 0, 3,
                            dimnames = list(c(),
                                            c("category", "trope", "link"))),
-                    stringsAsFactors = F)
+                    stringsAsFactors = stringsAsFactors, ...)
 
   # Find the latest level
   nodes <- html_children(content)
@@ -84,7 +90,8 @@ as.data.frame.tropr.content <- function(content,
           next
         }
 
-        if (res["class"] == "twikilink") {
+        if ("class" %in% names(res) &&
+            res["class"] == "twikilink") {
           ret <- rbind(ret,
                        data.frame(category = category_name,
                                   trope = basename(res["href"]),

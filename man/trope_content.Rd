@@ -2,7 +2,7 @@
 % Please edit documentation in R/tropr.R
 \name{trope_content}
 \alias{trope_content}
-\title{Get xml nodeset}
+\title{Get TV Trope content}
 \usage{
 trope_content(.url)
 }
@@ -10,17 +10,16 @@ trope_content(.url)
 \item{.url}{TV Tropes page url}
 }
 \value{
-\code{xml_nodeset} if it exists, it will return \code{xml_nodeset}
-  which contains TV Tropes page content, otherwise it will show error msg
+\code{tropr.content} if it exists, it returns \code{tropr.content}
+  which contains TV Tropes page content, otherwise it will show error.
 }
 \description{
-You can use \code{trope_node} with TV Tropes URL to get \code{xml_nodeset},
-and \code{as.data.frame()} converts \code{xml_nodeset} to \code{data.frame}
+You can use \code{trope_content} with TV Tropes URL to get its content,
+and \code{as.data.frame()} converts the content to \code{data.frame}
 }
 \examples{
-\dontrun{
+library(tropr)
+
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
-# It will return xml nodeset
 content <- trope_content(.url)
-}
 }

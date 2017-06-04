@@ -1,13 +1,12 @@
 Package: tropr
 Type: Package
-Title: A TV Tropes Statistics
-Version: 0.1.0
+Title: TV Tropes Statistics
+Version: 0.1.1
 Date: 2017-06-04
 Author: Kim Seonghyun [aut, cre]
 Maintainer: Kim Seonghyun <shyeon.kim@scipi.net>
-Description: A tool for TV Tropes, aimed particularly at the page summary. It
-  can be used to retrieve page data, links among tropes for trope, anime, and
-  characters.
+Description: Fetch TV Tropes <http://www.tvtropes.org>, which collects various
+  conventions in creative works, and convert it to data frame.
 Depends:
     R (>= 3.2.0)
 Imports:
@@ -16,7 +15,8 @@ Imports:
     xml2
 Suggests:
     testthat,
-    knitr
+    knitr,
+    ggplot2
 License: Apache License 2.0 | file LICENSE
 VignetteBuilder: knitr
 LazyData: true

@@ -4,12 +4,16 @@
 \alias{as.data.frame.tropr.content}
 \title{Convert TV Trope content to data frame}
 \usage{
-\method{as.data.frame}{tropr.content}(content, category_name = "main")
+\method{as.data.frame}{tropr.content}(x, ...,
+  stringsAsFactors = default.stringsAsFactors())
 }
 \arguments{
-\item{content}{\code{tropr.content} object}
+\item{x}{\code{tropr.content} object}
 
-\item{category_name}{a default name for trope category}
+\item{...}{additional arguments to be passed to \code{data.frame}}
+
+\item{stringsAsFactors}{logical: should the character vector be converted to
+a factor?}
 }
 \value{
 \code{data.frame} with tv trope contents
@@ -18,10 +22,11 @@
 Convert TV Trope content to data frame
 }
 \examples{
-\dontrun{
-.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Hikikomori"
+library(tropr)
+
+# Use any TV Trope URL that you analyses
+.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+
 content <- trope_content(.url)
-# Returns \\code{data.frame}
-content <- as.data.frame(node)
-}
+.df <- as.data.frame(content)
 }

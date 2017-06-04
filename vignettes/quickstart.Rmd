@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quick start}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, echo = FALSE, message = FALSE}
@@ -14,7 +14,7 @@ library(tropr)
 library(ggplot2)
 ```
 
-# Installation
+### Installation
 
 Either you try stable CRAN version
 
@@ -28,13 +28,13 @@ Or unstable development version
 devtools::install_github("zedoul/tropr")
 ```
 
-You'll need to you `library` to load as follows:
+You'll need to use `library` to load as follows:
 
 ```{r, eval = F}
 library(tropr)
 ```
 
-# Get TV Trope data
+### Get Content
 
 ```{r}
 library(tropr)
@@ -48,6 +48,7 @@ head(.df[, c("category", "link")])
 The output is `tidy`, so that you can easily turn them into a plot as follows:
 
 ```{r}
+library(ggplot2)
 q <- ggplot(.df, aes(category)) + geom_bar() +
        coord_flip() + ylab("Freq") + xlab("")
 plot(q)

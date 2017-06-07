@@ -53,3 +53,37 @@ q <- ggplot(.df, aes(category)) + geom_bar() +
        coord_flip() + ylab("Freq") + xlab("")
 plot(q)
 ```
+
+### Page history analysis
+
+```{r}
+library(tropr)
+library(ggplot2)
+
+.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+hist_content <- trope_history(.url)
+.data <- aggr_history_edit_count(hist_content)
+
+q <- ggplot(.data, aes(x = date, y = count)) +
+    geom_line(size= .8) +
+    theme(axis.text.x = element_text(angle = 50, hjust = 1, vjust = 1, size = 8),
+          plot.title = element_text(hjust = 0.5)) +
+    scale_x_date(date_breaks = .resolution) +
+    ggtitle("Edits on Little Witch Academia Main Page in TV Tropes") +
+    xlab("") + ylab("#edit")
+plot(q)
+```
+
+```{r}
+library(tropr)
+library(ggplot2)
+
+.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+hist_content <- trope_history(.url)
+.data <- aggr_history_editor_count(hist_content)
+
+q <- ggplot(".data", aes(x = reorder(Group.1, x), y = x, fill = x)) + geom_bar(stat= "identity") +
+       theme(axis.text.y = element_text(size = 3)) +
+       coord_flip() + ggtitle("Editors on Little Witch Academia Main Page in TV Tropes") + ylab("Freq") + xlab("")
+plot(q)
+```

@@ -7,7 +7,15 @@ test_that("trope_content, as.data.frame", {
 
   .df <- as.data.frame(content)
   expect_true(inherits(.df, "data.frame"))
+})
 
+test_that("trope_history, aggr", {
+  .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+  hist_content <- trope_history(.url)
+  expect_true(inherits(hist_content, "data.frame"))
+
+  ret <- aggr_history_edit_count(hist_content)
+  expect_true(inherits(ret, "data.frame"))
 })
 
 test_that("More cases", {

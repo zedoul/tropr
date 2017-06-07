@@ -140,3 +140,68 @@ as.data.frame.tropr.content <- function(x,
   rownames(ret) <- NULL
   ret
 }
+
+#' Get TV Trope content history data
+#'
+#' @param .url TV Tropes page url
+#' @return \code{data.frame} it returns \code{data.frame}
+#' @importFrom xml2 xml_attrs
+#' @importFrom rvest html_children html_text
+#' @export
+#' @examples
+#' library(tropr)
+#'
+#' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+#' hist_content <- trope_history(.url)
+
+trope_history <- function(.url) {
+  .url_elms <- strsplit(.url, "/")[[1]]
+
+  hist_url <- paste0("http://tvtropes.org/pmwiki/article_history.php?article=",
+                     paste(tail(.url_elms, 2), collapse = "."),
+                     "&more=t")
+  content <- trope_content(hist_url)
+  class(content) <- "xml_nodeset"
+  nodes <- html_children(content)
+
+  # TODO: Add lines of change
+  ret <- data.frame(matrix(vector(), 0, 3,
+                           dimnames = list(c(),
+                                           c("datetime", "editor", "count"))),
+                    stringsAsFactors = stringsAsFactors)
+
+  for (i in 1:length(nodes)) {
+    node <- nodes[i]
+    res <- xml_attrs(nodes[i])[[1]]
+    if (res["class"] == "panel panel-default no-padding item-history") {
+      edit_info <- html_children(nodes[i])[1] %>%
+                      html_text %>% strsplit( "  ") %>% .[[1]]
+      edit_info <- strsplit(edit_info[1], " ")[[1]]
+      if (length(edit_info) != 6) {
+        stop("TV Tropes changed their format: it is time to catch that.")
+      }
+
+      # TODO: Find a better way than this
+      if (grepl("st", edit_info[1])) {
+        .th <- "st"
+      } else if (grepl("nd", edit_info[1])) {
+        .th <- "nd"
+      } else if (grepl("rd", edit_info[1])) {
+        .th <- "rd"
+      } else if (grepl("th", edit_info[1])) {
+        .th <- "th"
+      } else {
+        stop("TV Tropes changed their format: it is time to catch that.")
+      }
+
+      .datetime <- strptime(paste(edit_info[1:5], collapse = " "),
+                            paste0("%d", .th ," %b '%y %I:%M:%S %p"))
+      .editor <- edit_info[6]
+      ret <- rbind(ret, data.frame(datetime = .datetime,
+                                   editor = .editor,
+                                   count = 1))
+    }
+  }
+
+  ret
+}

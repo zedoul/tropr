@@ -1,6 +1,6 @@
 ---
 author: "Kim Seonghyun"
-title: "Quick start"
+title: "Quickstart"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -56,6 +56,10 @@ plot(q)
 
 ### Page history analysis
 
+Apart from page analysis, tropr also provides functions for page history
+analysis. Here is the example with `Little Witch Academia` page history.
+
+
 ```{r}
 library(tropr)
 library(ggplot2)
@@ -99,6 +103,11 @@ q <- ggplot(impacts, aes(x = reorder(date, impact),
        ylab("") + xlab("")
 plot(q)
 ```
+
+It is important to consider the distribution of contributors,
+and here is how you can do with tropr.
+Note that this will create distribution not based on subset like previous examples,
+but on whole dataset.
 
 ```{r}
 .data <- aggr_history_editor_count(hist_content)

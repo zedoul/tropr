@@ -153,7 +153,6 @@ as.data.frame.tropr.content <- function(x,
 #'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
 #' hist_content <- trope_history(.url)
-
 trope_history <- function(.url) {
   .url_elms <- strsplit(.url, "/")[[1]]
 

@@ -59,10 +59,16 @@ plot(q)
 ```{r}
 library(tropr)
 library(ggplot2)
+library(dplyr)
 
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
 hist_content <- trope_history(.url)
 .data <- aggr_history_edit_count(hist_content)
+.resolution <- "1 week"
+
+# In this case, we are interested in history only after the TV release, and
+# before the episode 23
+.data <- .data[c(47:169), ]
 
 q <- ggplot(.data, aes(x = date, y = count)) +
     geom_line(size= .8) +
@@ -74,16 +80,37 @@ q <- ggplot(.data, aes(x = date, y = count)) +
 plot(q)
 ```
 
+And we can compare the impact of episode 22, with others as follows:
+
 ```{r}
 library(tropr)
 library(ggplot2)
+library(magrittr)
 
-.url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
-hist_content <- trope_history(.url)
+impacts <- .data %>% group_by(date = cut(date, "week")) %>% summarise(impact = sum(count))
+impacts$date <- paste0("7 days from ", as.character(impacts$date), " (", paste("Episode", rep(1:22)), ")")
+
+q <- ggplot(impacts, aes(x = reorder(date, impact),
+                       y = impact,
+                       fill = impact)) +
+       geom_bar(stat= "identity") +
+       theme(axis.text.y = element_text(size = 6)) +
+       coord_flip() + ggtitle("Weekly edits on Little Witch Academia Characters Page in TV Tropes") +
+       ylab("") + xlab("")
+plot(q)
+```
+
+```{r}
 .data <- aggr_history_editor_count(hist_content)
 
-q <- ggplot(".data", aes(x = reorder(Group.1, x), y = x, fill = x)) + geom_bar(stat= "identity") +
+q <- ggplot(.data, aes(x = reorder(editor, count),
+                       y = count,
+                       fill = count)) +
+       geom_bar(stat= "identity") +
        theme(axis.text.y = element_text(size = 3)) +
-       coord_flip() + ggtitle("Editors on Little Witch Academia Main Page in TV Tropes") + ylab("Freq") + xlab("")
+       coord_flip() + ggtitle("Editors on Little Witch Academia Characters Page in TV Tropes\n",
+                              paste("from", tail(hist_content)[5, "datetime"],
+                                    "to", head(hist_content[1, "datetime"]))) +
+       ylab("") + xlab("")
 plot(q)
 ```

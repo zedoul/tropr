@@ -8,15 +8,17 @@ Maintainer: Kim Seonghyun <shyeon.kim@scipi.net>
 Description: Fetch TV Tropes <http://www.tvtropes.org>, which collects various
   conventions in creative works, and convert it to data frame.
 Depends:
-    R (>= 3.2.0)
+    R (>= 3.3.0)
 Imports:
-    stringr,
     rvest,
+    stringr,
     xml2
 Suggests:
-    testthat,
+    ggplot2,
+    igraph,
     knitr,
-    ggplot2
+    magrittr,
+    testthat
 License: Apache License 2.0 | file LICENSE
 VignetteBuilder: knitr
 LazyData: true

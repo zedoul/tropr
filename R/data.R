@@ -1,23 +1,37 @@
 #' @export
 trope_data <- function(trope_urls,
-                       cache_dir = tempdir()) {
-  for () {
-    node <- trope_node(.url)
-    content <- trope_content(node, category_name = category_name)
+                       cache_dir = tempdir(),
+                       stringsAsFactors = default.stringsAsFactors()) {
+  ret <- data.frame(category = as.character(),
+                    trope = as.character(),
+                    link = as.character(),
+                    parent = as.character(),
+                    stringsAsFactors = stringsAsFactors, ...)
+
+  # TODO: Add cache_dir feature
+  for (trope_url in trope_urls) {
+    content <- trope_content(.url)
+    res <- as.data.frame()
+    if (!is.null(ret)) {
+      ret <- rbind(ret, res)
+    }
   }
-}
 
-#' @importFrom igraph graph.data.frame
-#' @export
-as.tropr.graph <- function(.data) {
-   graph.data.frame(lk, directed = F)
-
-  .data$datetime <- as.Date(.data$datetime)
-  ret <- aggregate(.data$count, by = list(.data$editor), sum)
-  names(ret) <- c("date", "count")
-  ret[with(ret, order(-count)), ]
+  ret
 }
 
 #' @export
-redirect_check <- function() {
+as.tropr.graph <- function(.data,
+                          cache_dir = tempdir()) {
+  stopifnot(all(c("category", "trope", "link", "parent") %in% names(.data)))
+
+  ret <- data.frame(start_id = as.character(),
+                    end_id = as.character(),
+                    cost = as.character(),
+                    stringsAsFactors = stringsAsFactors, ...)
+  ret
+}
+
+#' @export
+redirect_check <- function(.data) {
 }

@@ -38,7 +38,9 @@ trope_content <- function(.url) {
     stop("Failed to find tvtrope content")
   }
 
-  structure(target_node, class = "tropr.content")
+  structure(list(node = target_node,
+                 url = .url),
+            class = "tropr.content")
 }
 
 #' Convert TV Trope content to data frame
@@ -61,15 +63,19 @@ trope_content <- function(.url) {
 #' content <- trope_content(.url)
 #' .df <- as.data.frame(content)
 as.data.frame.tropr.content <- function(x,
-                                ...,
-                                stringsAsFactors = default.stringsAsFactors()) {
-  content <- x
-  category_name = "main"
+                          ...,
+                          stringsAsFactors = default.stringsAsFactors()) {
+  stopifnot(inherits(x, "tropr.content"))
+
+  content <- x$node
+  parent_url <- x$url
+  category_name <- "main"
 
   class(content) <- "xml_nodeset"
-  ret <- data.frame(matrix(vector(), 0, 3,
-                           dimnames = list(c(),
-                                           c("category", "trope", "link"))),
+  ret <- data.frame(category = as.character(),
+                    trope = as.character(),
+                    link = as.character(),
+                    parent = as.character(),
                     stringsAsFactors = stringsAsFactors, ...)
 
   # Find the latest level
@@ -95,7 +101,8 @@ as.data.frame.tropr.content <- function(x,
           ret <- rbind(ret,
                        data.frame(category = category_name,
                                   trope = basename(res["href"]),
-                                  link = res["href"]))
+                                  link = res["href"],
+                                  parent = basename(parent_url)))
         }
       }
 
@@ -107,7 +114,9 @@ as.data.frame.tropr.content <- function(x,
       ret <- rbind(ret,
                    data.frame(category = category_name,
                               trope = basename(res["href"]),
-                              link = res["href"]))
+                              link = res["href"],
+                              parent = basename(parent_url)))
+
     }
 
     # Change category name with folder label
@@ -131,7 +140,8 @@ as.data.frame.tropr.content <- function(x,
           ret <- rbind(ret,
                        data.frame(category = category_name,
                                   trope = basename(res["href"]),
-                                  link = res["href"]))
+                                  link = res["href"],
+                                  parent = basename(parent_url)))
         }
       }
     }
@@ -141,10 +151,10 @@ as.data.frame.tropr.content <- function(x,
   ret
 }
 
-#' Get TV Trope content history data
+#' Get TV Trope page history
 #'
 #' @param .url TV Tropes page url
-#' @return \code{data.frame} it returns \code{data.frame}
+#' @return \code{data.frame} time-series data with edit counters
 #' @importFrom xml2 xml_attrs
 #' @importFrom rvest html_children html_text
 #' @export
@@ -159,11 +169,15 @@ trope_history <- function(.url) {
   hist_url <- paste0("http://tvtropes.org/pmwiki/article_history.php?article=",
                      paste(tail(.url_elms, 2), collapse = "."),
                      "&more=t")
-  content <- trope_content(hist_url)
+  x <- trope_content(hist_url)
+  stopifnot(inherits(x, "tropr.content"))
+
+  content <- x$node
+  parent_url <- x$url
   class(content) <- "xml_nodeset"
   nodes <- html_children(content)
 
-  # TODO: Add lines of change
+  # TODO: Add a column for lines of change information
   ret <- data.frame(matrix(vector(), 0, 3,
                            dimnames = list(c(),
                                            c("datetime", "editor", "count"))),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tropr.R
 \name{trope_history}
 \alias{trope_history}
-\title{Get TV Trope content history data}
+\title{Get TV Trope page history}
 \usage{
 trope_history(.url)
 }
@@ -10,10 +10,10 @@ trope_history(.url)
 \item{.url}{TV Tropes page url}
 }
 \value{
-\code{data.frame} it returns \code{data.frame}
+\code{data.frame} time-series data with edit counters
 }
 \description{
-Get TV Trope content history data
+Get TV Trope page history
 }
 \examples{
 library(tropr)

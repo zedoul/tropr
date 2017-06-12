@@ -10,8 +10,9 @@ vignette: >
 ---
 
 ```{r, echo = FALSE, message = FALSE}
-library(tropr)
-library(ggplot2)
+library(tropr, warn.conflicts = F)
+library(dplyr, warn.conflicts = F)
+library(ggplot2, warn.conflicts = F)
 ```
 
 ### Installation
@@ -51,6 +52,10 @@ The output is `tidy`, so that you can easily turn them into a plot as follows:
 library(ggplot2)
 q <- ggplot(.df, aes(category)) + geom_bar() +
        coord_flip() + ylab("Freq") + xlab("")
+```
+
+
+```{r, fig.width=7,fig.height=6}
 plot(q)
 ```
 
@@ -67,7 +72,7 @@ library(dplyr)
 
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
 hist_content <- trope_history(.url)
-.data <- aggr_history_edit_count(hist_content)
+.data <- aggr_history_daily_count(hist_content)
 .resolution <- "1 week"
 
 # In this case, we are interested in history only after the TV release, and
@@ -81,6 +86,9 @@ q <- ggplot(.data, aes(x = date, y = count)) +
     scale_x_date(date_breaks = .resolution) +
     ggtitle("Edits on Little Witch Academia Main Page in TV Tropes") +
     xlab("") + ylab("#edit")
+```
+
+```{r, fig.width=7,fig.height=6}
 plot(q)
 ```
 
@@ -101,11 +109,14 @@ q <- ggplot(impacts, aes(x = reorder(date, impact),
        theme(axis.text.y = element_text(size = 6)) +
        coord_flip() + ggtitle("Weekly edits on Little Witch Academia Characters Page in TV Tropes") +
        ylab("") + xlab("")
+```
+
+```{r, fig.width=7,fig.height=6}
 plot(q)
 ```
 
-It is important to consider the distribution of contributors,
-and here is how you can do with tropr.
+It is important to check the distribution of editors' commitments on the page.
+Following example shows how you can do with tropr.
 Note that this will create distribution not based on subset like previous examples,
 but on whole dataset.
 
@@ -121,5 +132,9 @@ q <- ggplot(.data, aes(x = reorder(editor, count),
                               paste("from", tail(hist_content)[5, "datetime"],
                                     "to", head(hist_content[1, "datetime"]))) +
        ylab("") + xlab("")
+```
+
+
+```{r, fig.width=7,fig.height=6}
 plot(q)
 ```

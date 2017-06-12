@@ -14,7 +14,9 @@ test_that("trope_history, aggr", {
   hist_content <- trope_history(.url)
   expect_true(inherits(hist_content, "data.frame"))
 
-  ret <- aggr_history_edit_count(hist_content)
+  ret <- aggr_history_daily_count(hist_content)
+  expect_true(inherits(ret, "data.frame"))
+  ret <- aggr_history_editor_count(hist_content)
   expect_true(inherits(ret, "data.frame"))
 })
 

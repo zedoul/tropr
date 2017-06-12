@@ -10,6 +10,8 @@ Description: Fetch TV Tropes <http://www.tvtropes.org>, which collects various
 Depends:
     R (>= 3.3.0)
 Imports:
+    digest,
+    magrittr,
     rvest,
     stringr,
     xml2

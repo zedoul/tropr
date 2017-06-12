@@ -1,4 +1,4 @@
-context("tropr")
+context("content")
 
 test_that("trope_content, as.data.frame", {
   .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"

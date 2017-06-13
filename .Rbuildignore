@@ -1,7 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
-^.*\.html$
 .Rprofile
 inst/db
 man-roxygen

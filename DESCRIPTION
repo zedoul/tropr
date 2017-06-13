@@ -1,8 +1,8 @@
 Package: tropr
 Type: Package
 Title: TV Tropes Statistics
-Version: 0.1.1
-Date: 2017-06-04
+Version: 0.1.2
+Date: 2017-06-13
 Author: Kim Seonghyun [aut, cre]
 Maintainer: Kim Seonghyun <shyeon.kim@scipi.net>
 Description: Fetch TV Tropes <http://www.tvtropes.org>, which collects various

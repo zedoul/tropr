@@ -11,7 +11,7 @@ An R-package for obtaining narrative data from [TV Tropes](http://tvtropes.org).
 #### Highlights
 
 * Easy-to-use functions for fetching data
-* Provide number of functions to analyse TV Tropes
+* Provide several functions to analyse TV Tropes
 
 #### Installation
 

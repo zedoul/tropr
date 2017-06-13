@@ -13,7 +13,9 @@
 #' library(tropr)
 #'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+#' \dontrun{
 #' content <- trope_content(.url)
+#' }
 trope_content <- function(.url) {
   doc <- xml2::read_html(.url)
 
@@ -60,8 +62,10 @@ trope_content <- function(.url) {
 #' # Use any TV Tropes page url that you analyses
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
 #'
+#' \dontrun{
 #' content <- trope_content(.url)
 #' .df <- as.data.frame(content)
+#' }
 as.data.frame.tropr.content <- function(x,
                           ...,
                           stringsAsFactors = default.stringsAsFactors()) {

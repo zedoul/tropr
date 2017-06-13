@@ -21,5 +21,7 @@ and \code{as.data.frame()} converts the content to \code{data.frame}
 library(tropr)
 
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+\dontrun{
 content <- trope_content(.url)
+}
 }

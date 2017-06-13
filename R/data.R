@@ -1,33 +1,3 @@
-change_redirects <- function(links,
-                             redirect_to_cache_dir = tempdir(),
-                             filter_pattern = "/Main/",
-                             verbose = F) {
-  stopifnot(dir.exists(redirect_to_cache_dir))
-
-  ret <- c()
-  for (i in 1:length(links)) {
-    trope_url <- links[i]
-    key <- digest::digest(trope_url)
-    file_path <- file.path(redirect_to_cache_dir,
-                           paste0(key, "_redirect_to.csv"))
-    if (!file.exists(file_path)) {
-      warning(file_path, " is not exist")
-      trope_redirect_to(trope_url, redirect_to_cache_dir)
-      stopifnot(file.exists(file_path))
-    }
-
-    .df <- read.csv2(file_path)
-    if(.df[1, "redirected"] == T) {
-      ret <- c(ret, as.character(.df[1, "redirect_to"]))
-    } else {
-      ret <- c(ret, as.character(trope_url))
-    }
-  }
-
-  stopifnot(length(links) == length(ret))
-  ret
-}
-
 #' Prepare cache for given tv trope urls
 #'
 #' @param urls url of tv trope pages
@@ -41,6 +11,13 @@ change_redirects <- function(links,
 #' @param verbose verbosity option
 #' @return \code{data.frame} which contains statistics how it constructs cache
 #' @export
+#' @examples
+#' library(tropr)
+#'
+#' .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan")
+#' \dontrun{
+#' res <- trope_cache(.urls)
+#' }
 trope_cache <- function(urls,
                         depth = 1,
                         trope_cache_dir = tempdir(),

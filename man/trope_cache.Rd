@@ -31,3 +31,11 @@ it will only fetch data of \code{urls}, and for 2, it will fetch both
 \description{
 Prepare cache for given tv trope urls
 }
+\examples{
+library(tropr)
+
+.urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan")
+\dontrun{
+res <- trope_cache(.urls)
+}
+}

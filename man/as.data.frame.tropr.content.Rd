@@ -27,6 +27,8 @@ library(tropr)
 # Use any TV Tropes page url that you analyses
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
 
+\dontrun{
 content <- trope_content(.url)
 .df <- as.data.frame(content)
+}
 }

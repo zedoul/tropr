@@ -54,10 +54,33 @@ q <- ggplot(.df, aes(category)) + geom_bar() +
        coord_flip() + ylab("Freq") + xlab("")
 ```
 
-
 ```{r, fig.width=7,fig.height=6}
 plot(q)
 ```
+
+### Cache trope data
+
+It would be very hard to implement and to maintain data fetching module from
+the bottom. `tropr` provides easy-to-use function `trope_cache` which will check
+redirects, filtering, and data fetching automatically.
+
+Here is one example of how you can use `trope_cache`.
+
+```{r, eval = F}
+library(tropr)
+
+.urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan")
+res <- trope_cache(.urls, depth = 3, filter_pattern = "/Main/")
+```
+
+It will fetch a set of tropes starting from `.urls` in three tree-depth.
+You can set filter option, where the example uses `/Main/`, to fetch specific
+category that you are interested in.
+
+Once it cached, you can fetch those data with `trope_data` function, regardless
+of your network connection status.
+Note that cache directory is temporary given from `tempdir()` unless you set
+it by yourself with `cache_dir` parameter.
 
 ### Page history analysis
 

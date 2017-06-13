@@ -2,7 +2,7 @@
 % Please edit documentation in R/tropr.R
 \name{trope_content}
 \alias{trope_content}
-\title{Get TV Trope content}
+\title{Get TV Tropes content}
 \usage{
 trope_content(.url)
 }

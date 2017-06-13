@@ -1,4 +1,4 @@
-#' Get TV Trope content
+#' Get TV Tropes content
 #'
 #' You can use \code{trope_content} with TV Tropes URL to get its content,
 #' and \code{as.data.frame()} converts the content to \code{data.frame}
@@ -43,7 +43,7 @@ trope_content <- function(.url) {
             class = "tropr.content")
 }
 
-#' Convert TV Trope content to data frame
+#' Convert TV Tropes content to data frame
 #'
 #' @param x \code{tropr.content} object
 #' @param stringsAsFactors logical: should the character vector be converted to
@@ -57,7 +57,7 @@ trope_content <- function(.url) {
 #' @examples
 #' library(tropr)
 #'
-#' # Use any TV Trope URL that you analyses
+#' # Use any TV Tropes page url that you analyses
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
 #'
 #' content <- trope_content(.url)
@@ -151,7 +151,7 @@ as.data.frame.tropr.content <- function(x,
   ret
 }
 
-#' Get TV Trope page history
+#' Get TV Tropes page history
 #'
 #' @param .url TV Tropes page url
 #' @param stringsAsFactors logical: should the character vector be converted to

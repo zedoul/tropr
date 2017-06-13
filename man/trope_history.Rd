@@ -2,7 +2,7 @@
 % Please edit documentation in R/tropr.R
 \name{trope_history}
 \alias{trope_history}
-\title{Get TV Trope page history}
+\title{Get TV Tropes page history}
 \usage{
 trope_history(.url, stringsAsFactors = default.stringsAsFactors())
 }
@@ -16,7 +16,7 @@ a factor?}
 \code{data.frame} time-series data with edit counters
 }
 \description{
-Get TV Trope page history
+Get TV Tropes page history
 }
 \examples{
 library(tropr)

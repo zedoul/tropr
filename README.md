@@ -6,12 +6,12 @@
 
 #### tropr: A tool for TV Tropes, aimed particularly at the page summary
 
-An R-package for obtaining narrative data from [TV Trope](http://tvtropes.org).
+An R-package for obtaining narrative data from [TV Tropes](http://tvtropes.org).
 
 #### Highlights
 
 * Easy-to-use functions for fetching data
-* Provide number of functions to analyse TV Trope
+* Provide number of functions to analyse TV Tropes
 
 #### Installation
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tropr.R
 \name{as.data.frame.tropr.content}
 \alias{as.data.frame.tropr.content}
-\title{Convert TV Trope content to data frame}
+\title{Convert TV Tropes content to data frame}
 \usage{
 \method{as.data.frame}{tropr.content}(x, ...,
   stringsAsFactors = default.stringsAsFactors())
@@ -19,12 +19,12 @@ a factor?}
 \code{data.frame} with tv trope contents
 }
 \description{
-Convert TV Trope content to data frame
+Convert TV Tropes content to data frame
 }
 \examples{
 library(tropr)
 
-# Use any TV Trope URL that you analyses
+# Use any TV Tropes page url that you analyses
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
 
 content <- trope_content(.url)

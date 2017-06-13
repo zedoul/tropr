@@ -134,7 +134,9 @@ trope_cache <- function(urls,
 #'
 #' .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
 #'            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+#' \dontrun{
 #' res <- trope_data(.urls)
+#' }
 trope_data <- function(trope_urls,
                        cache_dir = tempdir(),
                        sleep = .5,
@@ -216,7 +218,9 @@ trope_data <- function(trope_urls,
 #'
 #' .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
 #'            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+#' \dontrun{
 #' res <- trope_redirect_to(.urls)
+#' }
 trope_redirect_to <- function(trope_urls,
                               cache_dir = tempdir(),
                               sleep = .5,

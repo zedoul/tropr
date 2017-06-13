@@ -7,8 +7,10 @@
 #' library(tropr)
 #'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+#' \dontrun{
 #' hist_content <- trope_history(.url)
 #' .summary <- aggr_history_daily_count(hist_content)
+#' }
 aggr_history_daily_count <- function(history_data) {
   stopifnot(all(c("datetime", "editor", "count") %in% names(history_data)))
   history_data$datetime <- as.Date(history_data$datetime)
@@ -26,8 +28,10 @@ aggr_history_daily_count <- function(history_data) {
 #' library(tropr)
 #'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+#' \dontrun{
 #' hist_content <- trope_history(.url)
 #' .summary <- aggr_history_editor_count(hist_content)
+#' }
 aggr_history_editor_count <- function(history_data) {
   stopifnot(all(c("datetime", "editor", "count") %in% names(history_data)))
   history_data <- data.frame(history_data, count = 1)

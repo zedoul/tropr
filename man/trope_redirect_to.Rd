@@ -27,5 +27,7 @@ library(tropr)
 
 .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+\dontrun{
 res <- trope_redirect_to(.urls)
+}
 }

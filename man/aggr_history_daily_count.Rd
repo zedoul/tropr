@@ -16,6 +16,8 @@ Aggregate page history data to daily edit counts
 library(tropr)
 
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+\dontrun{
 hist_content <- trope_history(.url)
 .summary <- aggr_history_daily_count(hist_content)
+}
 }

@@ -11,15 +11,18 @@ Depends:
     R (>= 3.3.0)
 Imports:
     digest,
+    httr,
     magrittr,
     rvest,
+    stats,
     stringr,
+    utils,
     xml2
 Suggests:
+    dplyr,
     ggplot2,
     igraph,
     knitr,
-    magrittr,
     testthat
 License: Apache License 2.0 | file LICENSE
 VignetteBuilder: knitr

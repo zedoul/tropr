@@ -28,20 +28,37 @@ change_redirects <- function(links,
   ret
 }
 
-#' Prepare cache for trope data
+#' Prepare cache for given tv trope urls
 #'
-#' 1) redirect_to handling
-#' 2) trope data fetching handling
-#'
+#' @param urls url of tv trope pages
+#' @param depth a size of tree-depth of trope urls. If you set it as 1, then
+#'   it will only fetch data of \code{urls}, and for 2, it will fetch both
+#'   \code{urls}, and their children urls.
+#' @param trope_cache_dir a directory for trope data caching
+#' @param redirect_to_cache_dir a directory for redirect urls caching
+#' @param sleep wait time between queries
+#' @param filter_pattern a pattern to filter tv trope urls
+#' @param verbose verbosity option
+#' @return \code{data.frame} which contains statistics how it constructs cache
 #' @export
 trope_cache <- function(urls,
                         depth = 1,
                         trope_cache_dir = tempdir(),
                         redirect_to_cache_dir = tempdir(),
                         sleep = .5,
+                        filter_pattern = NULL,
                         verbose = T) {
+  stopifnot(length(urls) > 0)
+  stopifnot(depth > 0)
+  stopifnot(sleep > 0)
   stopifnot(dir.exists(trope_cache_dir))
   stopifnot(dir.exists(redirect_to_cache_dir))
+
+  urls <- sort(unique(urls))
+  if (!is.null(filter_pattern)) {
+    indices <- grepl(filter_pattern, urls)
+    urls <- urls[indices]
+  }
 
   ret <- data.frame(depth = as.numeric(),
                     number_of_urls = as.numeric(),
@@ -56,11 +73,16 @@ trope_cache <- function(urls,
     if (verbose) {
       cat("* check redirects...\n")
     }
+
     res <- trope_redirect_to(urls,
                              cache_dir = redirect_to_cache_dir,
                              sleep = sleep,
                              verbose = verbose)
-    urls_to_process <- unique(res$redirect_to)
+    urls_to_process <- sort(unique(res$redirect_to))
+    if (!is.null(filter_pattern)) {
+      indices <- grepl(filter_pattern, urls_to_process)
+      urls_to_process <- urls_to_process[indices]
+    }
 
     if (verbose) {
       cat("* download tropes...\n")
@@ -71,7 +93,11 @@ trope_cache <- function(urls,
                       sleep = sleep,
                       verbose = verbose)
 
-    urls <- unique(res$link)
+    urls <- sort(unique(res$link))
+    if (!is.null(filter_pattern)) {
+      indices <- grepl(filter_pattern, urls)
+      urls <- urls[indices]
+    }
 
     if (verbose) {
       cat("* processed tropes:", length(urls_to_process),"\n")
@@ -92,9 +118,23 @@ trope_cache <- function(urls,
   ret
 }
 
+#' Fetch trope data
+#'
+#' @param trope_urls url of tv trope pages
+#' @param cache_dir a directory for data caching
+#' @param sleep wait time between queries
+#' @param verbose verbosity option
+#' @return \code{data.frame} which contains trope data
 #' @importFrom digest digest
 #' @importFrom magrittr %>%
+#' @importFrom utils write.csv2
 #' @export
+#' @examples
+#' library(tropr)
+#'
+#' .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
+#'            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+#' res <- trope_data(.urls)
 trope_data <- function(trope_urls,
                        cache_dir = tempdir(),
                        sleep = .5,
@@ -159,9 +199,24 @@ trope_data <- function(trope_urls,
                  }}))
 }
 
+#' Get the redirected urls of given trope urls
+#'
+#' @param trope_urls url of tv trope pages
+#' @param cache_dir a directory for data caching
+#' @param sleep wait time between queries
+#' @param verbose verbosity option
+#' @return \code{data.frame} which contains the redirected urls of trope urls
 #' @importFrom digest digest
+#' @importFrom httr GET
 #' @importFrom magrittr %>%
+#' @importFrom utils write.csv2 read.csv2
 #' @export
+#' @examples
+#' library(tropr)
+#'
+#' .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
+#'            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+#' res <- trope_redirect_to(.urls)
 trope_redirect_to <- function(trope_urls,
                               cache_dir = tempdir(),
                               sleep = .5,

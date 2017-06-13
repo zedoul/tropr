@@ -4,10 +4,13 @@
 \alias{trope_history}
 \title{Get TV Trope page history}
 \usage{
-trope_history(.url)
+trope_history(.url, stringsAsFactors = default.stringsAsFactors())
 }
 \arguments{
 \item{.url}{TV Tropes page url}
+
+\item{stringsAsFactors}{logical: should the character vector be converted to
+a factor?}
 }
 \value{
 \code{data.frame} time-series data with edit counters
@@ -19,5 +22,7 @@ Get TV Trope page history
 library(tropr)
 
 .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+\dontrun{
 hist_content <- trope_history(.url)
+}
 }

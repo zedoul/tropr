@@ -154,16 +154,24 @@ as.data.frame.tropr.content <- function(x,
 #' Get TV Trope page history
 #'
 #' @param .url TV Tropes page url
+#' @param stringsAsFactors logical: should the character vector be converted to
+#'   a factor?
 #' @return \code{data.frame} time-series data with edit counters
 #' @importFrom xml2 xml_attrs
+#' @importFrom magrittr %>%
 #' @importFrom rvest html_children html_text
+#' @importFrom utils tail
 #' @export
 #' @examples
 #' library(tropr)
 #'
 #' .url <- "http://tvtropes.org/pmwiki/pmwiki.php/Characters/LittleWitchAcademia"
+#' \dontrun{
 #' hist_content <- trope_history(.url)
-trope_history <- function(.url) {
+#' }
+trope_history <- function(.url,
+                          stringsAsFactors = default.stringsAsFactors()) {
+
   .url_elms <- strsplit(.url, "/")[[1]]
 
   hist_url <- paste0("http://tvtropes.org/pmwiki/article_history.php?article=",
@@ -188,7 +196,8 @@ trope_history <- function(.url) {
     res <- xml_attrs(nodes[i])[[1]]
     if (res["class"] == "panel panel-default no-padding item-history") {
       edit_info <- html_children(nodes[i])[1] %>%
-                      html_text %>% strsplit( "  ") %>% .[[1]]
+                      html_text %>% strsplit("  ")
+      edit_info <- edit_info[[1]]
       edit_info <- strsplit(edit_info[1], " ")[[1]]
       if (length(edit_info) != 6) {
         stop("TV Tropes changed their format: it is time to catch that.")

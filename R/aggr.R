@@ -1,6 +1,7 @@
 #' Aggregate page history data to daily edit counts
 #'
-#' @param .data data.frame
+#' @param history_data data.frame
+#' @importFrom stats aggregate
 #' @export
 #' @examples
 #' library(tropr)
@@ -19,6 +20,7 @@ aggr_history_daily_count <- function(history_data) {
 #' Aggregate page history data to editor edit counts
 #'
 #' @param history_data data.frame
+#' @importFrom stats aggregate
 #' @export
 #' @examples
 #' library(tropr)

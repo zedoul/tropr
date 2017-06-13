@@ -7,7 +7,7 @@
 aggr_history_daily_count(history_data)
 }
 \arguments{
-\item{.data}{data.frame}
+\item{history_data}{data.frame}
 }
 \description{
 Aggregate page history data to daily edit counts

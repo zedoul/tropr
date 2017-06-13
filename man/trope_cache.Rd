@@ -2,12 +2,32 @@
 % Please edit documentation in R/data.R
 \name{trope_cache}
 \alias{trope_cache}
-\title{Prepare cache for trope data}
+\title{Prepare cache for given tv trope urls}
 \usage{
 trope_cache(urls, depth = 1, trope_cache_dir = tempdir(),
-  redirect_to_cache_dir = tempdir(), sleep = 0.5, verbose = T)
+  redirect_to_cache_dir = tempdir(), sleep = 0.5, filter_pattern = NULL,
+  verbose = T)
+}
+\arguments{
+\item{urls}{url of tv trope pages}
+
+\item{depth}{a size of tree-depth of trope urls. If you set it as 1, then
+it will only fetch data of \code{urls}, and for 2, it will fetch both
+\code{urls}, and their children urls.}
+
+\item{trope_cache_dir}{a directory for trope data caching}
+
+\item{redirect_to_cache_dir}{a directory for redirect urls caching}
+
+\item{sleep}{wait time between queries}
+
+\item{filter_pattern}{a pattern to filter tv trope urls}
+
+\item{verbose}{verbosity option}
+}
+\value{
+\code{data.frame} which contains statistics how it constructs cache
 }
 \description{
-1) redirect_to handling
-2) trope data fetching handling
+Prepare cache for given tv trope urls
 }

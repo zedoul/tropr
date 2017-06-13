@@ -4,8 +4,8 @@
 \alias{trope_cache}
 \title{Prepare cache for trope data}
 \usage{
-trope_cache(trope_urls, depth = 1, trope_cache_dir = tempdir(),
-  redirect_to_cache_dir = tempdir(), sleep = 0.5, verbose = F)
+trope_cache(urls, depth = 1, trope_cache_dir = tempdir(),
+  redirect_to_cache_dir = tempdir(), sleep = 0.5, verbose = T)
 }
 \description{
 1) redirect_to handling

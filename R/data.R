@@ -34,35 +34,62 @@ change_redirects <- function(links,
 #' 2) trope data fetching handling
 #'
 #' @export
-trope_cache <- function(trope_urls,
+trope_cache <- function(urls,
                         depth = 1,
                         trope_cache_dir = tempdir(),
                         redirect_to_cache_dir = tempdir(),
                         sleep = .5,
-                        verbose = F) {
+                        verbose = T) {
   stopifnot(dir.exists(trope_cache_dir))
-  stopifnot(dir.exists(redirect_cache_dir))
+  stopifnot(dir.exists(redirect_to_cache_dir))
+
+  ret <- data.frame(depth = as.numeric(),
+                    number_of_urls = as.numeric(),
+                    number_of_links = as.numeric(),
+                    stringsAsFactors = F)
 
   while(depth > 0) {
     if (verbose) {
-      cat("################################################################\n")
-      cat("# Depth: ", depth, "............................................\n")
+      cat("depth:", depth, "..............................................\n")
     }
-    urls <- trope_redirect_to(trope_urls,
-                              cache_dir = redirect_cache_dir,
-                              verbose = verbose)
 
-    ret <- trope_data(urls,
+    if (verbose) {
+      cat("* check redirects...\n")
+    }
+    res <- trope_redirect_to(urls,
+                             cache_dir = redirect_to_cache_dir,
+                             sleep = sleep,
+                             verbose = verbose)
+    urls_to_process <- unique(res$redirect_to)
+
+    if (verbose) {
+      cat("* download tropes...\n")
+    }
+
+    res <- trope_data(urls_to_process,
                       cache_dir = trope_cache_dir,
+                      sleep = sleep,
                       verbose = verbose)
 
-    trope_urls <- ret$link
+    urls <- unique(res$link)
+
+    if (verbose) {
+      cat("* processed tropes:", length(urls_to_process),"\n")
+      cat("* tropes to be processed:", length(urls), "\n")
+    }
+
+    ret <- rbind(ret, data.frame(depth = depth,
+                                 number_of_urls = length(urls_to_process),
+                                 number_of_links = length(urls)))
+
     depth <- depth - 1
   }
 
   if (verbose) {
-    cat("Successfully prepared cache")
+    cat("Successfully prepared cache\n")
   }
+
+  ret
 }
 
 #' @importFrom digest digest

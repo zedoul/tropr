@@ -36,3 +36,8 @@ To load package:
 #### Quickstart
 
 Check [this page](https://CRAN.R-project.org/package=tropr/vignettes/quickstart.html) on CRAN.
+
+### Similar packages
+
+* [GSODR](https://CRAN.R-project.org/web/packages/GSODR/index.html)
+* [bikedata](https://CRAN.R-project.org/web/packages/bikedata/index.html)

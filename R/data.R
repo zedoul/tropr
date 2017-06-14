@@ -131,7 +131,7 @@ trope_data <- function(trope_urls,
     }
 
     tryCatch({
-      key <- digest::digest(trope_url)
+      key <- digest::digest(tolower(trope_url))
       file_path <- file.path(cache_dir, paste0(key, ".csv"))
 
       if (file.exists(file_path)) {
@@ -164,7 +164,8 @@ trope_data <- function(trope_urls,
 
   # Save trope urls into cache folder first
   csv_files <- file.path(cache_dir,
-                         paste0(lapply(trope_urls, digest::digest) %>% unlist,
+                         paste0(lapply(tolower(trope_urls),
+                                       digest::digest) %>% unlist,
                                 ".csv"))
 
   do.call(rbind,
@@ -187,6 +188,7 @@ trope_data <- function(trope_urls,
 #' @return \code{data.frame} which contains the redirected urls of trope urls
 #' @importFrom digest digest
 #' @importFrom httr GET
+#' @importFrom stringr str_detect
 #' @importFrom magrittr %>%
 #' @importFrom utils write.csv2 read.csv2
 #' @export
@@ -213,7 +215,7 @@ trope_redirect_to <- function(trope_urls,
     }
 
     tryCatch({
-      key <- digest::digest(trope_url)
+      key <- digest::digest(tolower(trope_url))
       file_path <- file.path(cache_dir, paste0(key, "_redirect_to.csv"))
 
       if (file.exists(file_path)) {
@@ -225,6 +227,9 @@ trope_redirect_to <- function(trope_urls,
 
       resp <- httr::GET(trope_url)
       redirect_to <- gsub("\\?from..*","", resp$url)
+      stopifnot(str_detect(redirect_to,
+                           "tvtropes.org/pmwiki/pmwiki.php"))
+
       res <- data.frame(link = trope_url,
                         redirect_to = redirect_to,
                         redirected = ifelse(trope_url == redirect_to, F, T))
@@ -250,7 +255,8 @@ trope_redirect_to <- function(trope_urls,
 
   # Save trope urls into cache folder first
   csv_files <- file.path(cache_dir,
-                         paste0(lapply(trope_urls, digest::digest) %>% unlist,
+                         paste0(lapply(tolower(trope_urls),
+                                digest::digest) %>% unlist,
                                 "_redirect_to.csv"))
 
   do.call(rbind,

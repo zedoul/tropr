@@ -1,6 +1,7 @@
 # tropr
 
 [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/tropr)](https://CRAN.R-project.org/package=tropr)
+[![Rdoc](http://www.rdocumentation.org/badges/version/tropr)](http://www.rdocumentation.org/packages/tropr)
 [![CRAN\_Statistics\_Total](http://cranlogs.r-pkg.org/badges/grand-total/tropr)](https://CRAN.R-project.org/package=tropr)
 [![CRAN\_Statistics\_Month](http://cranlogs.r-pkg.org/badges/tropr)](https://CRAN.R-project.org/package=tropr)
 

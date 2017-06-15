@@ -18,4 +18,9 @@ test_that("trope_cache", {
   urls <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
   res <- trope_cache(urls, depth = 1, verbose = F)
   expect_true(inherits(res, "data.frame"))
+
+  # tricky case
+  urls <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+  res <- trope_cache(urls, depth = 1, verbose = F)
+  expect_true(inherits(res, "data.frame"))
 })

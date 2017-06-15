@@ -31,11 +31,14 @@ trope_cache <- function(urls,
   stopifnot(dir.exists(trope_cache_dir))
   stopifnot(dir.exists(redirect_to_cache_dir))
 
+  black_list <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/Recursion")
+
   urls <- sort(unique(urls))
   if (!is.null(filter_pattern)) {
     indices <- grepl(filter_pattern, urls)
     urls <- urls[indices]
   }
+  urls <- urls[! urls %in% black_list]
 
   ret <- data.frame(depth = as.numeric(),
                     number_of_urls = as.numeric(),
@@ -50,6 +53,7 @@ trope_cache <- function(urls,
     if (verbose) {
       cat("* check redirects...\n")
     }
+    urls <- urls[! urls %in% black_list]
 
     res <- trope_redirect_to(urls,
                              cache_dir = redirect_to_cache_dir,
@@ -59,6 +63,12 @@ trope_cache <- function(urls,
     if (!is.null(filter_pattern)) {
       indices <- grepl(filter_pattern, urls_to_process)
       urls_to_process <- urls_to_process[indices]
+    }
+    urls_to_process <- urls_to_process[! urls_to_process %in% black_list]
+
+    if (length(urls_to_process) == 0) {
+      cat("* no url to fetch...\n")
+      break
     }
 
     if (verbose) {
@@ -75,6 +85,7 @@ trope_cache <- function(urls,
       indices <- grepl(filter_pattern, urls)
       urls <- urls[indices]
     }
+    urls <- urls[! urls %in% black_list]
 
     if (verbose) {
       cat("* processed tropes:", length(urls_to_process),"\n")
@@ -123,6 +134,12 @@ trope_data <- function(trope_urls,
   # Save trope urls into cache folder first
   for (i in 1:length(trope_urls)) {
     trope_url <- trope_urls[i]
+
+    if (i %% 100 == 0) {
+      capture.output({
+        gc()
+      })
+    }
 
     if (verbose) {
       cat(toString(Sys.time()),
@@ -207,6 +224,12 @@ trope_redirect_to <- function(trope_urls,
 
   for (i in 1:length(trope_urls)) {
     trope_url <- trope_urls[i]
+
+    if (i %% 100 == 0) {
+      capture.output({
+        gc()
+      })
+    }
 
     if (verbose) {
       cat(toString(Sys.time()),

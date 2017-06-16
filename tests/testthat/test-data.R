@@ -4,7 +4,7 @@ test_that("trope_data", {
   urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
              "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
   res <- trope_urls(urls)
-  expect_true(inherits(res, "data.frame"))
+  expect_true(length(res) == 2)
 
   urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Creator/GailSimone",
             "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")

@@ -200,7 +200,7 @@ trope_data <- function(urls,
   }
 
   # Return cached data
-  trope_cached_data(urls, cached_dir)
+  trope_cached_data(urls, cache_dir)
 }
 
 #' Get the redirected urls of given trope urls
@@ -293,6 +293,6 @@ trope_redirect_to <- function(urls,
 
   # Return cached data
   trope_cached_data(urls,
-                    redirect_to_cached_dir,
+                    redirect_to_cache_dir,
                     extension = "_redirect_to.csv")
 }

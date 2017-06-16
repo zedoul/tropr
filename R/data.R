@@ -10,6 +10,31 @@ trope_urls <- function(urls, filter_pattern = NULL) {
   urls[! urls %in% black_list]
 }
 
+#' @importFrom digest digest
+#' @export
+trope_cached_data <- function(urls,
+                              cache_dir = tempdir(),
+                              extension = ".csv") {
+  csv_files <- file.path(cache_dir,
+                         paste0(lapply(tolower(urls),
+                                       digest::digest) %>% unlist,
+                                extension))
+  do.call(rbind,
+          lapply(csv_files,
+                 function(csv_file) {
+                   if (file.exists(csv_file)) {
+                     target_data <- read.csv2(csv_file, stringsAsFactors = F)
+                   } else {
+                     return(NULL)
+                   }
+
+                   if (nrow(target_data) > 0) {
+                     target_data
+                   } else {
+                     NULL
+                 }}))
+}
+
 #' Prepare cache for given tv trope urls
 #'
 #' @param urls url of tv trope pages
@@ -103,7 +128,7 @@ trope_cache <- function(urls,
 
 #' Fetch trope data
 #'
-#' @param trope_urls url of tv trope pages
+#' @param urls url of tv trope pages
 #' @param cache_dir a directory for data caching
 #' @param sleep wait time between queries
 #' @param verbose verbosity option
@@ -120,15 +145,15 @@ trope_cache <- function(urls,
 #' \dontrun{
 #' res <- trope_data(.urls)
 #' }
-trope_data <- function(trope_urls,
+trope_data <- function(urls,
                        cache_dir = tempdir(),
                        sleep = .5,
                        verbose = F) {
   stopifnot(dir.exists(cache_dir))
 
   # Save trope urls into cache folder first
-  for (i in 1:length(trope_urls)) {
-    trope_url <- trope_urls[i]
+  for (i in 1:length(urls)) {
+    trope_url <- urls[i]
 
     if (i %% 100 == 0) {
       capture.output({
@@ -138,7 +163,7 @@ trope_data <- function(trope_urls,
 
     if (verbose) {
       cat(toString(Sys.time()),
-          " | ", i, "/", length(trope_urls), " | ",
+          " | ", i, "/", length(urls), " | ",
           trope_url, "... ", sep = "")
     }
 
@@ -174,26 +199,8 @@ trope_data <- function(trope_urls,
     }
   }
 
-  # Save trope urls into cache folder first
-  csv_files <- file.path(cache_dir,
-                         paste0(lapply(tolower(trope_urls),
-                                       digest::digest) %>% unlist,
-                                ".csv"))
-
-  do.call(rbind,
-          lapply(csv_files,
-                 function(csv_file) {
-                   if (file.exists(csv_file)) {
-                     target_data <- read.csv2(csv_file, stringsAsFactors = F)
-                   } else {
-                     return(NULL)
-                   }
-
-                   if (nrow(target_data) > 0) {
-                     target_data
-                   } else {
-                     NULL
-                 }}))
+  # Return cached data
+  trope_cached_data(urls, cached_dir)
 }
 
 #' Get the redirected urls of given trope urls
@@ -284,23 +291,8 @@ trope_redirect_to <- function(urls,
     }
   }
 
-  # Save trope urls into cache folder first
-  csv_files <- file.path(redirect_to_cache_dir,
-                         paste0(lapply(tolower(urls),
-                                digest::digest) %>% unlist,
-                                "_redirect_to.csv"))
-
-  do.call(rbind,
-          lapply(csv_files,
-                 function(csv_file) {
-                   if (file.exists(csv_file)) {
-                     target_data <- read.csv2(csv_file, stringsAsFactors = F)
-                   } else {
-                     return(NULL)
-                   }
-                   if (nrow(target_data) > 0) {
-                     target_data
-                   } else {
-                     NULL
-                   }}))
+  # Return cached data
+  trope_cached_data(urls,
+                    redirect_to_cached_dir,
+                    extension = "_redirect_to.csv")
 }

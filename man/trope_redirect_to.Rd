@@ -4,13 +4,13 @@
 \alias{trope_redirect_to}
 \title{Get the redirected urls of given trope urls}
 \usage{
-trope_redirect_to(trope_urls, cache_dir = tempdir(), sleep = 0.5,
+trope_redirect_to(urls, redirect_to_cache_dir = tempdir(), sleep = 0.5,
   verbose = F)
 }
 \arguments{
-\item{trope_urls}{url of tv trope pages}
+\item{urls}{url of tv trope pages}
 
-\item{cache_dir}{a directory for data caching}
+\item{redirect_to_cache_dir}{a directory for data caching}
 
 \item{sleep}{wait time between queries}
 

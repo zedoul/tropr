@@ -4,10 +4,10 @@
 \alias{trope_data}
 \title{Fetch trope data}
 \usage{
-trope_data(trope_urls, cache_dir = tempdir(), sleep = 0.5, verbose = F)
+trope_data(urls, cache_dir = tempdir(), sleep = 0.5, verbose = F)
 }
 \arguments{
-\item{trope_urls}{url of tv trope pages}
+\item{urls}{url of tv trope pages}
 
 \item{cache_dir}{a directory for data caching}
 

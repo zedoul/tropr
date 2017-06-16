@@ -1,3 +1,15 @@
+trope_urls <- function(urls, filter_pattern = NULL) {
+  black_list <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/Recursion")
+
+  urls <- sort(unique(urls))
+  if (!is.null(filter_pattern)) {
+    indices <- grepl(filter_pattern, urls)
+    urls <- urls[indices]
+  }
+
+  urls[! urls %in% black_list]
+}
+
 #' Prepare cache for given tv trope urls
 #'
 #' @param urls url of tv trope pages
@@ -31,14 +43,7 @@ trope_cache <- function(urls,
   stopifnot(dir.exists(trope_cache_dir))
   stopifnot(dir.exists(redirect_to_cache_dir))
 
-  black_list <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/Recursion")
-
-  urls <- sort(unique(urls))
-  if (!is.null(filter_pattern)) {
-    indices <- grepl(filter_pattern, urls)
-    urls <- urls[indices]
-  }
-  urls <- urls[! urls %in% black_list]
+  urls <- trope_urls(urls, filter_pattern)
 
   ret <- data.frame(depth = as.numeric(),
                     number_of_urls = as.numeric(),
@@ -53,18 +58,13 @@ trope_cache <- function(urls,
     if (verbose) {
       cat("* check redirects...\n")
     }
-    urls <- urls[! urls %in% black_list]
 
-    res <- trope_redirect_to(urls,
-                             cache_dir = redirect_to_cache_dir,
-                             sleep = sleep,
-                             verbose = verbose)
-    urls_to_process <- sort(unique(res$redirect_to))
-    if (!is.null(filter_pattern)) {
-      indices <- grepl(filter_pattern, urls_to_process)
-      urls_to_process <- urls_to_process[indices]
-    }
-    urls_to_process <- urls_to_process[! urls_to_process %in% black_list]
+    res_red <- trope_redirect_to(urls,
+                                 redirect_to_cache_dir = redirect_to_cache_dir,
+                                 sleep = sleep,
+                                 verbose = verbose)
+
+    urls_to_process <- trope_urls(res_red$redirect_to, filter_pattern)
 
     if (length(urls_to_process) == 0) {
       cat("* no url to fetch...\n")
@@ -80,12 +80,7 @@ trope_cache <- function(urls,
                       sleep = sleep,
                       verbose = verbose)
 
-    urls <- sort(unique(res$link))
-    if (!is.null(filter_pattern)) {
-      indices <- grepl(filter_pattern, urls)
-      urls <- urls[indices]
-    }
-    urls <- urls[! urls %in% black_list]
+    urls <- trope_urls(res$link, filter_pattern)
 
     if (verbose) {
       cat("* processed tropes:", length(urls_to_process),"\n")
@@ -188,7 +183,12 @@ trope_data <- function(trope_urls,
   do.call(rbind,
           lapply(csv_files,
                  function(csv_file) {
-                   target_data <- read.csv2(csv_file, stringsAsFactors = F)
+                   if (file.exists(csv_file)) {
+                     target_data <- read.csv2(csv_file, stringsAsFactors = F)
+                   } else {
+                     return(NULL)
+                   }
+
                    if (nrow(target_data) > 0) {
                      target_data
                    } else {
@@ -198,8 +198,8 @@ trope_data <- function(trope_urls,
 
 #' Get the redirected urls of given trope urls
 #'
-#' @param trope_urls url of tv trope pages
-#' @param cache_dir a directory for data caching
+#' @param urls url of tv trope pages
+#' @param redirect_to_cache_dir a directory for data caching
 #' @param sleep wait time between queries
 #' @param verbose verbosity option
 #' @return \code{data.frame} which contains the redirected urls of trope urls
@@ -217,13 +217,13 @@ trope_data <- function(trope_urls,
 #' \dontrun{
 #' res <- trope_redirect_to(.urls)
 #' }
-trope_redirect_to <- function(trope_urls,
-                              cache_dir = tempdir(),
+trope_redirect_to <- function(urls,
+                              redirect_to_cache_dir = tempdir(),
                               sleep = .5,
                               verbose = F) {
 
-  for (i in 1:length(trope_urls)) {
-    trope_url <- trope_urls[i]
+  for (i in 1:length(urls)) {
+    URL <- urls[i]
 
     if (i %% 100 == 0) {
       capture.output({
@@ -233,29 +233,37 @@ trope_redirect_to <- function(trope_urls,
 
     if (verbose) {
       cat(toString(Sys.time()),
-          " | ", i, "/", length(trope_urls), " | ",
-          trope_url, "... ", sep = "")
+          " | ", i, "/", length(urls), " | ",
+          URL, "... ", sep = "")
     }
 
     tryCatch({
-      key <- digest::digest(tolower(trope_url))
-      file_path <- file.path(cache_dir, paste0(key, "_redirect_to.csv"))
+      key <- digest::digest(tolower(URL))
+      file_path <- file.path(redirect_to_cache_dir,
+                             paste0(key, "_redirect_to.csv"))
 
       if (file.exists(file_path)) {
         if (verbose) {
-          cat("pass\n-", trope_url, "exists\n")
+          cat("pass\n-", URL, "exists\n")
         }
         next
       }
 
-      resp <- httr::GET(trope_url)
+      resp <- httr::GET(URL)
       redirect_to <- gsub("\\?from..*","", resp$url)
-      stopifnot(str_detect(redirect_to,
-                           "tvtropes.org/pmwiki/pmwiki.php"))
+      to_save <- str_detect(redirect_to,
+                            "tvtropes.org/pmwiki/pmwiki.php")
 
-      res <- data.frame(link = trope_url,
+      res <- data.frame(link = URL,
                         redirect_to = redirect_to,
-                        redirected = ifelse(trope_url == redirect_to, F, T))
+                        redirected = ifelse(URL == redirect_to, F, T),
+                        saved = to_save)
+      if (!to_save) {
+        if (verbose) {
+          cat("pass\n-", redirect_to, "is not TV trope page\n")
+        }
+        next
+      }
 
       if (!is.null(res)) {
         write.csv2(res,
@@ -277,18 +285,22 @@ trope_redirect_to <- function(trope_urls,
   }
 
   # Save trope urls into cache folder first
-  csv_files <- file.path(cache_dir,
-                         paste0(lapply(tolower(trope_urls),
+  csv_files <- file.path(redirect_to_cache_dir,
+                         paste0(lapply(tolower(urls),
                                 digest::digest) %>% unlist,
                                 "_redirect_to.csv"))
 
   do.call(rbind,
           lapply(csv_files,
                  function(csv_file) {
-                   target_data <- read.csv2(csv_file, stringsAsFactors = F)
+                   if (file.exists(csv_file)) {
+                     target_data <- read.csv2(csv_file, stringsAsFactors = F)
+                   } else {
+                     return(NULL)
+                   }
                    if (nrow(target_data) > 0) {
                      target_data
                    } else {
                      NULL
-                 }}))
+                   }}))
 }

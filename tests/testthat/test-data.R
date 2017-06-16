@@ -1,6 +1,19 @@
 context("data")
 
 test_that("trope_data", {
+  urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
+             "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+  res <- trope_urls(urls)
+  expect_true(inherits(res, "data.frame"))
+
+  urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Creator/GailSimone",
+            "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
+  res <- trope_urls(urls, filter_pattern = "/Main/")
+  expect_true(res[1] == urls[2])
+})
+
+
+test_that("trope_data", {
   .urls <- c("http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan",
              "http://tvtropes.org/pmwiki/pmwiki.php/Main/YouAreBetterThanYouThinkYouAre")
   res <- trope_data(.urls)

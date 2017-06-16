@@ -32,8 +32,12 @@ test_that("trope_cache", {
   res <- trope_cache(urls, depth = 1, verbose = F)
   expect_true(inherits(res, "data.frame"))
 
-  # tricky case
-  urls <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/SenseiChan"
+  # from here tricky cases will be tested
+  urls <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Recursion"
+  res <- trope_cache(urls, depth = 1, verbose = F)
+  expect_true(inherits(res, "data.frame"))
+
+  urls <- "http://tvtropes.org/pmwiki/pmwiki.php/Main/Contributors"
   res <- trope_cache(urls, depth = 1, verbose = F)
   expect_true(inherits(res, "data.frame"))
 })

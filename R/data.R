@@ -7,7 +7,12 @@ trope_urls <- function(urls, filter_pattern = NULL) {
     urls <- urls[indices]
   }
 
-  urls[! urls %in% black_list]
+  ret <- urls[! urls %in% black_list]
+  if (length(ret) == 0) {
+    NULL
+  } else {
+    ret
+  }
 }
 
 #' @importFrom digest digest
@@ -69,6 +74,7 @@ trope_cache <- function(urls,
   stopifnot(dir.exists(redirect_to_cache_dir))
 
   urls <- trope_urls(urls, filter_pattern)
+  stopifnot(length(urls) > 0)
 
   ret <- data.frame(depth = as.numeric(),
                     number_of_urls = as.numeric(),
@@ -92,7 +98,9 @@ trope_cache <- function(urls,
     urls_to_process <- trope_urls(res_red$redirect_to, filter_pattern)
 
     if (length(urls_to_process) == 0) {
-      cat("* no url to fetch...\n")
+      if (verbose) {
+        cat("* no url to fetch...\n")
+      }
       break
     }
 

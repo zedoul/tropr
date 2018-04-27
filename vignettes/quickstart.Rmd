@@ -100,7 +100,7 @@ hist_content <- trope_history(.url)
 
 # In this case, we are interested in history only after the TV release, and
 # before the episode 23
-.data <- .data[c(47:169), ]
+.data <- .data[c(48:192), ]
 
 q <- ggplot(.data, aes(x = date, y = count)) +
     geom_line(size= .8) +
@@ -115,7 +115,7 @@ q <- ggplot(.data, aes(x = date, y = count)) +
 plot(q)
 ```
 
-And we can compare the impact of episode 22, with others as follows:
+And we can compare impacts of all episodes 1-25, with others as follows:
 
 ```{r}
 library(tropr)
@@ -123,7 +123,7 @@ library(ggplot2)
 library(magrittr)
 
 impacts <- .data %>% group_by(date = cut(date, "week")) %>% summarise(impact = sum(count))
-impacts$date <- paste0("7 days from ", as.character(impacts$date), " (", paste("Episode", rep(1:22)), ")")
+impacts$date <- paste0("7 days from ", as.character(impacts$date), " (", paste("Episode", rep(1:25)), ")")
 
 q <- ggplot(impacts, aes(x = reorder(date, impact),
                        y = impact,

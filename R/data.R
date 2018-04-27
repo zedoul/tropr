@@ -35,6 +35,9 @@ trope_cached_data <- function(urls,
 
                    if (nrow(target_data) > 0) {
                      target_data
+                     if (! "saved" %in% names(target_data)) {
+                       target_data <- cbind(target_data, saved = T)
+                     }
                    } else {
                      NULL
                  }}))

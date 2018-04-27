@@ -33,7 +33,13 @@ trope_cached_data <- function(urls,
                      return(NULL)
                    }
 
-                   if (nrow(target_data) > 0) {
+                   if (!is.null(target_data) && nrow(target_data) > 0) {
+                     if (ncol(target_data) == 4) {
+                        target_data <- target_data[, c("link",
+                                                       "redirect_to",
+                                                       "redirected")]
+                     }
+                     
                      target_data
                      if (! "saved" %in% names(target_data)) {
                        target_data <- cbind(target_data, saved = T)

@@ -19,7 +19,8 @@ trope_urls <- function(urls, filter_pattern = NULL) {
 #' @export
 trope_cached_data <- function(urls,
                               cache_dir = tempdir(),
-                              extension = ".csv") {
+                              extension = ".csv",
+                              .filter = T) {
   csv_files <- file.path(cache_dir,
                          paste0(lapply(tolower(urls),
                                        digest::digest) %>% unlist,
@@ -34,7 +35,7 @@ trope_cached_data <- function(urls,
                    }
 
                    if (!is.null(target_data) && nrow(target_data) > 0) {
-                     if (ncol(target_data) == 4) {
+                     if (all(ncol(target_data) == 4, .filter)) {
                         target_data <- target_data[, c("link",
                                                        "redirect_to",
                                                        "redirected")]
@@ -75,7 +76,8 @@ trope_cache <- function(urls,
                         redirect_to_cache_dir = tempdir(),
                         sleep = .5,
                         filter_pattern = NULL,
-                        verbose = T) {
+                        verbose = T,
+                        ...) {
   stopifnot(length(urls) > 0)
   stopifnot(depth > 0)
   stopifnot(sleep > 0)
@@ -120,7 +122,8 @@ trope_cache <- function(urls,
     res <- trope_data(urls_to_process,
                       cache_dir = trope_cache_dir,
                       sleep = sleep,
-                      verbose = verbose)
+                      verbose = verbose,
+                      ...)
 
     urls <- trope_urls(res$link, filter_pattern)
 
@@ -165,7 +168,8 @@ trope_cache <- function(urls,
 trope_data <- function(urls,
                        cache_dir = tempdir(),
                        sleep = .5,
-                       verbose = F) {
+                       verbose = F,
+                       ...) {
   stopifnot(dir.exists(cache_dir))
 
   # Save trope urls into cache folder first
@@ -217,7 +221,7 @@ trope_data <- function(urls,
   }
 
   # Return cached data
-  trope_cached_data(urls, cache_dir)
+  trope_cached_data(urls, cache_dir, ...)
 }
 
 #' Get the redirected urls of given trope urls

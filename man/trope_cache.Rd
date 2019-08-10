@@ -5,8 +5,8 @@
 \title{Prepare cache for given tv trope urls}
 \usage{
 trope_cache(urls, depth = 1, trope_cache_dir = tempdir(),
-  redirect_to_cache_dir = tempdir(), sleep = 0.5, filter_pattern = NULL,
-  verbose = T)
+  redirect_to_cache_dir = tempdir(), sleep = 0.5,
+  filter_pattern = NULL, verbose = T, ...)
 }
 \arguments{
 \item{urls}{url of tv trope pages}

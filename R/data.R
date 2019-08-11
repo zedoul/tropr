@@ -19,8 +19,7 @@ trope_urls <- function(urls, filter_pattern = NULL) {
 #' @export
 trope_cached_data <- function(urls,
                               cache_dir = tempdir(),
-                              extension = ".csv",
-                              .filter = T) {
+                              extension = ".csv") {
   csv_files <- file.path(cache_dir,
                          paste0(lapply(tolower(urls),
                                        digest::digest) %>% unlist,
@@ -35,19 +34,19 @@ trope_cached_data <- function(urls,
                    }
 
                    if (!is.null(target_data) && nrow(target_data) > 0) {
-                     if (all(ncol(target_data) == 4, .filter)) {
-                        target_data <- target_data[, c("link",
-                                                       "redirect_to",
-                                                       "redirected")]
-                     }
+#                     if (all(ncol(target_data) == 4)) {
+#                        target_data <- target_data[, c("link",
+#                                                       "redirect_to",
+#                                                       "redirected")]
+#                     }
                      
                      target_data
-                     if (! "saved" %in% names(target_data)) {
+                     #if (! "saved" %in% names(target_data)) {
                        target_data <- cbind(target_data, saved = T)
-                     }
+                     #}
                    } else {
                      NULL
-                 }}))
+                   }}))
 }
 
 #' Prepare cache for given tv trope urls
@@ -101,10 +100,10 @@ trope_cache <- function(urls,
       cat("* check redirects...\n")
     }
 
-    res_red <- trope_redirect_to(urls,
-                                 redirect_to_cache_dir = redirect_to_cache_dir,
-                                 sleep = sleep,
-                                 verbose = verbose)
+   res_red <- trope_redirect_to(urls,
+                                redirect_to_cache_dir = redirect_to_cache_dir,
+                                sleep = sleep,
+                                verbose = verbose)
 
     urls_to_process <- trope_urls(res_red$redirect_to, filter_pattern)
 
@@ -168,8 +167,7 @@ trope_cache <- function(urls,
 trope_data <- function(urls,
                        cache_dir = tempdir(),
                        sleep = .5,
-                       verbose = F,
-                       ...) {
+                       verbose = F) {
   stopifnot(dir.exists(cache_dir))
 
   # Save trope urls into cache folder first
@@ -221,7 +219,7 @@ trope_data <- function(urls,
   }
 
   # Return cached data
-  trope_cached_data(urls, cache_dir, ...)
+  trope_cached_data(urls, cache_dir)
 }
 
 #' Get the redirected urls of given trope urls

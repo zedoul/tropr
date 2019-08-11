@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><title>BannerFlow</title><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> <script type="text/javascript">var clickTag='';</script> <style type="text/css" media="screen">html,body,div{margin:0;padding:0;border:0}body{overflow:hidden}</style><script type="text/javascript">
+    
+  (function() {
+    var MAX_URL_PARAM_LENGTH = 34;
+    var CLICK_X_URL_KEY = 'nx';
+    var CLICK_Y_URL_KEY = 'ny';
+    var CREATIVE_DIMENSIONS_KEY = 'dim';
+    var AD_URL_PARAM = '&adurl=';
+
+    var relegateNavigation = '';
+    var urlParamMap = {};
+
+    urlParamMap[CLICK_X_URL_KEY] = null;
+    urlParamMap[CLICK_Y_URL_KEY] = null;
+    urlParamMap[CREATIVE_DIMENSIONS_KEY] = null;
+
+    var handleClickTagMessage = function(e) {
+      try {
+        var eventData = JSON.parse(e.data);
+      } catch (err) {
+        return;
+      }
+      if (eventData.isInitClickTag) {
+        if (eventData.clickTags) {
+          for (var i = 0; i < eventData.clickTags.length; i++) {
+            var clkTag = eventData.clickTags[i];
+            window[clkTag.name] = clkTag.url;
+          }
+        } else if (eventData.clickTag) {
+          window.clickTag = eventData.clickTag;
+        }
+        relegateNavigation = eventData.relegateNavigation;
+      }
+    };
+
+    var storeClickCoordinates = function(e) {
+      urlParamMap[CLICK_X_URL_KEY] = Math.round(e.clientX);
+      urlParamMap[CLICK_Y_URL_KEY] = Math.round(e.clientY);
+    };
+
+    var getCreativeDimensions = function() {
+      return window.innerWidth + 'x' + window.innerHeight;
+    }
+
+    var getExitClickParams = function(e) {
+      urlParamMap[CREATIVE_DIMENSIONS_KEY] = getCreativeDimensions();
+
+      var exitParams = '';
+      for (var key in urlParamMap) {
+        exitParams += '&' + key + '=';
+        if (urlParamMap[key] !== null) {
+          exitParams += urlParamMap[key];
+        }
+      }
+      return exitParams;
+    }
+
+    var appendExitClickParams = function(url) {
+      var adUrlIndex = url.toLowerCase().indexOf(AD_URL_PARAM);
+      var paramsToBeAdded = getExitClickParams();
+      if (adUrlIndex > -1 && paramsToBeAdded.length <= MAX_URL_PARAM_LENGTH) {
+        url = url.substr(0, adUrlIndex) + paramsToBeAdded +
+          url.substr(adUrlIndex);
+      };
+      return url;
+    };
+
+    if (open.call) {
+      window.open = function(open) {
+        return function(url, name, features) {
+          url = appendExitClickParams(url);
+          if (relegateNavigation === 'parent') {
+            var message = {'clickTag': url, 'isPostClickTag': true};
+            parent.postMessage(JSON.stringify(message), '*');
+          } else {
+            var args = [url, name];
+            if (features) {
+              args.push(features);
+            }
+            open.apply(window, args);
+          }
+        };
+      }(window.open);
+    }
+
+    if (window.addEventListener) {
+      window.addEventListener(
+          'message', handleClickTagMessage, false);
+      window.addEventListener('mousedown', storeClickCoordinates, true);
+    } else {
+      window.attachEvent('onmessage', handleClickTagMessage);
+    }
+  })();
+    
+  </script><script async="" src="FUSION2019---bannerset5-300x600-Swedish-animated-636997368489900/render.js"></script></head><body><script>var onClickTag=window.setInterval(function(){if(window.clickTag){clearInterval(onClickTag);var c=document.createElement('div');c.setAttribute('id','bannerflow');document.body.appendChild(c);var s=document.createElement('script');s.setAttribute('src','https://cdn.bannerflow.com/bf-placements/5d3ae20fac6dc3158831d0c2?targetwindow=_blank&targeturl='+encodeURIComponent(window.clickTag));document.body.appendChild(s);}},50);</script><div id="bannerflow"></div><script src="FUSION2019---bannerset5-300x600-Swedish-animated-636997368489900/5d3ae20fac6dc3158831d0c2"></script><div id="bf1565523055774" style="width: 300px; height: 600px; overflow: hidden; position: relative;"><div><div style="width: 300px; height: 600px;"><iframe src="FUSION2019---bannerset5-300x600-Swedish-animated-636997368489900/5d398bd4a929cf8124b5bd59.html" class="bf_image" style="max-width: none !important; max-height: none !important; width: 300px; height: 600px; position: absolute; left: 0px; top: 0px; background-color: transparent; border: medium none; opacity: 0; transition: opacity 0.1s ease 0s; z-index: 1; display: none;" scrolling="no" id="bf_15655230557813392" frameborder="0"></iframe><iframe src="FUSION2019---bannerset5-300x600-Swedish-animated-636997368489900/5d398bd4a929cf8124b5bd59_002.html" class="bf_animated" style="max-width: none !important; max-height: none !important; width: 300px; height: 600px; position: absolute; left: 0px; top: 0px; background-color: transparent; border: medium none; opacity: 1;" scrolling="no" id="bf_15655230570176131" frameborder="0"></iframe></div></div></div></body></html>

@@ -4,7 +4,7 @@ Title: TV Tropes Statistics
 Version: 0.1.2
 Date: 2017-06-13
 Author: Kim Seonghyun [aut, cre]
-Maintainer: Kim Seonghyun <shyeon.kim@scipi.net>
+Maintainer: Kim Seonghyun <zedoul@gmail.com>
 Description: Fetch TV Tropes <http://www.tvtropes.org>, which collects various
   conventions in creative works, and convert it to data frame.
 Depends:

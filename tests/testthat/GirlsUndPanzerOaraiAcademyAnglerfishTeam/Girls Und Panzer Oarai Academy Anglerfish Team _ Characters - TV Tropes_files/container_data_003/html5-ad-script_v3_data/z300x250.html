@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <script src="z300x250_data/AMOLibrary.js" charset="utf-8"></script>
+    <style media="screen">
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      iframe {
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+      function loadData() {
+        var replaceMacro = function(text, data) {
+          var macros = text.match(/\!\{(.*?)\}/g);
+          if(macros) {
+            macros.forEach(function(macro){
+              var macroText = macro.split('!{').join('').split('}').join('');
+              for(var key in data) { if(key == macroText) { macroText = data[key]; } }
+              text = text.split(macro).join(macroText);
+            });
+          }
+          return text;
+        }
+        var contentD = [
+          {
+            "name": "Microsoft",
+            "product_url": "https://office.com/",
+          }
+        ];
+
+        if(contentD && contentD.length) { contentD.forEach(function(data) { amo.registerContent(data); }); }
+        amo.registerVariation("layout", "Collab");
+        amo.registerVariation("headline1", "['<#505050>Get the complete chat and |online meetings solution |in <#D83B01>Office 365','17.5px',357,13,'21','350', 'left']");
+        //['<#505050>Get mobile, intelligent |intranet for your business |with SharePoint in <#D83B01>Office 365','17.5px',357,13,'21','350', 'left']
+        //['<#505050>Meet the hub for teamwork |in <#D83B01>Office 365 <#505050>Business |Premium','17.5px',357,13,'21','350', 'left']
+        //['<#505050>Connect, create and keep |your team organized with |<#D83B01>Office 365','17.5px',357,13,'21','350', 'left']
+        //['<#505050>Communicate through chat, |meetings, and calls |with <#D83B01>Office 365','17.5px',357,13,'21','350', 'left']
+        //['<#505050>Get the complete chat and |online meetings solution |in <#D83B01>Office 365','17.5px',357,13,'21','350', 'left']
+        amo.registerVariation("headline2", "na");
+        amo.registerVariation("costline3", "Starting at");
+        amo.registerVariation("costline1", "$12.50");
+        amo.registerVariation("costline2", "user/mo.");
+        amo.registerVariation("ctaText", "ACHETER MAINTENANT|");//CLICK HERE
+        // amo.registerVariation("ctaArrowVisibleFlag", "!{passthroughfield2}");
+        amo.registerVariation("impressionTracker", "../../../../1x1.png?impressionTracker=" + Math.random());
+        amo.registerVariation("clickTracker", "../../../../1x1.png?clickTracker=" + Math.random());
+        amo.registerVariation("clickURL", "!{product_url}");
+        var content = [], cam = {};
+        var cam = {
+          layout: amo.variation['layout'],
+          headline1: amo.variation['headline1'],
+          headline2: amo.variation['headline2'],
+          costline3: amo.variation['costline3'],
+          costline1: amo.variation['costline1'],
+          costline2: amo.variation['costline2'],
+          cta: amo.variation['ctaText'],
+          // ctaArrowVisibleFlag: amo.variation['ctaArrowVisibleFlag'],
+          impressionTracker: amo.variation['impressionTracker'],
+          clickTracker: amo.variation['clickTracker'],
+          url: amo.variation['clickURL']
+        };
+        if(amo.content && amo.content.length) {
+          amo.content.forEach(function(data) {
+            content.push({
+              feedData: data,
+              layout: cam.layout,
+              headline1: cam.headline1,
+              headline2: cam.headline2,
+              costline3: cam.costline3,
+              costline1: cam.costline1,
+              costline2: cam.costline2,
+              ctaText: cam.cta,
+              // ctaArrowVisibleFlag: cam.ctaArrowVisibleFlag.toString().toLowerCase() == 'false' ? false : true,
+              ctaArrowVisibleFlag: true,
+              impressionTracker: cam.impressionTracker,
+              clickTracker: cam.clickTracker,
+              url: cam.url
+            });
+          });
+          if(content && content.length) {
+            content.map(function(data){
+              for(var key in data) { data[key] = typeof data[key] == 'string' ? replaceMacro(data[key], data.feedData) : data[key]; }
+            });
+          }
+        }
+        window.adData = content[0], window.adClickUrl = adData.url;
+        // document.querySelector('iframe').addEventListener("click", exitHandler.bind(this));
+        // function exitHandler() {
+        //   // window.open(clickTag);
+        //   amo.onDynAdClick(adData.feedData, "CLICK", adClickUrl);
+        // }
+        var headline1 = adData.headline1 && adData.headline1.toLowerCase() != 'na' ? adData.headline1 : ' ';
+        var headline2 = adData.headline2 && adData.headline2.toLowerCase() != 'na' ? adData.headline2 : ' ';
+        var costline3 = adData.costline3 && adData.costline3.toLowerCase() != 'na' ? adData.costline3 : '';
+        var costline1 = adData.costline1 && adData.costline1.toLowerCase() != 'na' ? adData.costline1 : '';
+        var costline2 = adData.costline2 && adData.costline2.toLowerCase() != 'na' ? adData.costline2 : '';
+        var ctaText = adData.ctaText && adData.ctaText.toLowerCase() != 'na' ? adData.ctaText : '';
+        var ctaDirectionChange = Boolean(ctaText.split('|').length > 1);
+        ctaText = ctaText.split('|')[0];
+        var impressionTracker = adData.impressionTracker;
+        var clickTracker = adData.clickTracker;
+        var adUrl = '';
+        switch(adData.layout){
+          case 'Collab' : adURL = 'Collab/O365SMB_TMSCOL_USA_728x90_BAN_Teams_English_1250_NA_ANI_CH_T1_1.html';break;
+          case 'Home' : adURL = 'Home/O365SMB_TMSHOME_USA_728x90_BAN_Teams_English_1250_NA_ANI_CH_T1_1.html';break;
+          case 'OTG' : adURL = 'OTG/O365SMB_TMSOTG_USA_728x90_BAN_Teams_English_1250_NA_ANI_CH_T1_1.html';break;
+        }
+        var iframe = document.createElement('iframe');
+        iframe.src = adURL;
+        iframe.width = '728';
+        iframe.height = '90';
+        document.body.appendChild(iframe);
+        var bannerData = {
+          headline1: headline1,
+          headline2: headline2,
+          costline3: costline3,
+          costline1: costline1,
+          costline2: costline2,
+          ctaText: ctaText,
+          ctaDirectionChange: ctaDirectionChange,
+          CTAarrowVisible: [adData.ctaArrowVisibleFlag, 0,0],
+          impressionTracker: impressionTracker,
+          clickTracker: clickTracker,
+        };
+        window.getBannerData = function(){ var obj = {}; for(var i in bannerData) { obj[i] = bannerData[i]; } return obj; }
+      }
+      loadData();
+    </script><iframe src="z300x250_data/O365SMB_TMSCOL_USA_728x90_BAN_Teams_English_1250_NA_ANI_CH_.html" width="728" height="90"></iframe>
+  
+
+</body></html>

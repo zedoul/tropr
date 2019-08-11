@@ -22,6 +22,9 @@ trope_content <- function(.url) {
   target_node <- NULL
   nodes <- html_nodes(doc, "div")
 
+  # Lastly modified: 2019-08-11
+  key_word <- "main-article"
+
   for (i in 1:length(nodes)) {
     res <- xml_attrs(nodes[i])[[1]]
 
@@ -30,14 +33,14 @@ trope_content <- function(.url) {
       next
     }
 
-    if (any(res == "page-content")) {
+    if (any(res == key_word)) {
       target_node <- nodes[i]
       break
     }
   }
 
   if(is.null(target_node)) {
-    stop("Failed to find tvtrope content")
+    stop("Failed to find tvtrope content: ", key_word)
   }
 
   structure(list(node = target_node,

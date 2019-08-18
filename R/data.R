@@ -100,10 +100,10 @@ trope_cache <- function(urls,
       cat("* check redirects...\n")
     }
 
-   res_red <- trope_redirect_to(urls,
-                                redirect_to_cache_dir = redirect_to_cache_dir,
-                                sleep = sleep,
-                                verbose = verbose)
+    res_red <- trope_redirect_to(urls,
+                                 redirect_to_cache_dir = redirect_to_cache_dir,
+                                 sleep = sleep,
+                                 verbose = verbose)
 
     urls_to_process <- trope_urls(res_red$redirect_to, filter_pattern)
 
@@ -155,6 +155,7 @@ trope_cache <- function(urls,
 #' @importFrom digest digest
 #' @importFrom magrittr %>%
 #' @importFrom utils write.csv2
+#' @importFrom R.utils withTimeout TimeoutException
 #' @export
 #' @examples
 #' library(tropr)
@@ -197,7 +198,21 @@ trope_data <- function(urls,
         next
       }
 
-      content <- trope_content(trope_url)
+      content <- NULL
+
+      tryCatch({
+        R.utils::withTimeout({
+          content <- trope_content(trope_url)
+        }, timeout = 10)
+      }, TimeoutException = function(e) {
+        message("Timeout")
+      })
+
+      if (is.null(content)) {
+        message("Content is NULL: continue with next url")
+        next
+      }
+
       res <- as.data.frame(content)
       if (!is.null(res)) {
         write.csv2(res,

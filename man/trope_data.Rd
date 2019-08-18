@@ -4,8 +4,7 @@
 \alias{trope_data}
 \title{Fetch trope data}
 \usage{
-trope_data(urls, cache_dir = tempdir(), sleep = 0.5, verbose = F,
-  ...)
+trope_data(urls, cache_dir = tempdir(), sleep = 0.5, verbose = F)
 }
 \arguments{
 \item{urls}{url of tv trope pages}
